@@ -6,6 +6,7 @@ namespace PolicyPermission.Entity.Entities
         public Guid Guid { get; }
         public string FullName { get; private set; }
         public virtual Role Role { get; private set; }
+        public string? Permissions { get; private set; }
 
         protected User()
         {
@@ -23,5 +24,8 @@ namespace PolicyPermission.Entity.Entities
             FullName = fullName;
             Role = role;
         }
+        
+        public void SetPermissions(IEnumerable<string> permissions) => Permissions = string.Join(", ", permissions);
+        public IEnumerable<string> GetPermissions() => Permissions?.Split(", ", StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
     }
 }

@@ -11,6 +11,7 @@ namespace PolicyPermission.Data.Configurations
             builder.HasKey("Id");
             builder.Property(x => x.Guid).IsRequired();
             builder.Property(x => x.FullName).IsRequired();
+            builder.Property(x => x.Permissions).IsRequired(false);
             
             builder.HasOne(x => x.Role).WithMany().IsRequired();
             

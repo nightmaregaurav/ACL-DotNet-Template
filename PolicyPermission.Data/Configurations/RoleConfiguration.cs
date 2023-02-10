@@ -12,6 +12,7 @@ namespace PolicyPermission.Data.Configurations
             builder.Property(x => x.Guid).IsRequired();
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
+            builder.Property(x => x.Permissions).IsRequired(false);
             builder.ToTable("roles");
         }
     }

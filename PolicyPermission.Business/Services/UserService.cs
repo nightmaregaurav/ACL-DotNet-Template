@@ -47,8 +47,16 @@ namespace PolicyPermission.Business.Services
             {
                 Guid = user.Guid,
                 FullName = user.FullName,
-                Role = user.Role.Name
+                Role = user.Role.Name,
+                Permissions = user.Role.GetPermissions()
             });
+        }
+
+        public async Task SetPermissionsToUser(UserPermissionSetRequestModel model)
+        {
+            var user = await _userRepository.GetByGuid(model.Guid) ?? throw new UserDoesNotExistsException();
+            user.SetPermissions(model.Permissions);
+            await _userRepository.Update(user);
         }
     }
 }
