@@ -1,4 +1,4 @@
-using PolicyPermission.Abstraction;
+using PolicyPermission.Abstraction.MetaData;
 
 namespace PolicyPermission.MetaData
 {

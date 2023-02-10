@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Npgsql;
-using PolicyPermission.Abstraction;
+using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Data.Configurations;
 
 namespace PolicyPermission.Data
@@ -25,9 +26,9 @@ namespace PolicyPermission.Data
             return builder.ConnectionString;
         }
 
-        public AppDbContext(IDbMeta dbMeta)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IOptions<IDbMeta> dbMetaOptions)
         {
-            _connectionString = GetConnString(dbMeta);
+            _connectionString = GetConnString(dbMetaOptions.Value);
         }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
