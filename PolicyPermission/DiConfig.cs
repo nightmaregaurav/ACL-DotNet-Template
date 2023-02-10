@@ -9,8 +9,6 @@ namespace PolicyPermission
     {
         public static void UseDi(this IServiceCollection services)
         {
-            services.AddTransient<AppDbContext>();
-            
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IDbMeta, DbMeta>();
             services.AddSingleton<IJwtMeta, JwtMeta>();

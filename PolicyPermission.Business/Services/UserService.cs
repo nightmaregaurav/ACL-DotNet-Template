@@ -31,13 +31,13 @@ namespace PolicyPermission.Business.Services
             var user = await _userRepository.GetByGuid(model.Guid) ?? throw new UserDoesNotExistsException();
             var role = await _roleRepository.GetByGuid(model.Role) ?? throw new RoleDoesNotExistsException();
             user.Update(model.FullName, role);
-            _userRepository.Update(user);
+            await _userRepository.Update(user);
         }
 
         public async Task DeleteUser(Guid guid)
         {
             var user = await _userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
-            _userRepository.Remove(user);
+            await _userRepository.Remove(user);
         }
 
         public async Task<IEnumerable<UserResponseModel>> GetAllUsers()

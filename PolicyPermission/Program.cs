@@ -77,6 +77,7 @@ builder.Services.AddAuthentication(x => {
 
 builder.Services.AddCors(corsOptions => corsOptions.AddDefaultPolicy(policy => policy.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(_ => true).AllowCredentials()));
 builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddScoped<AppDbContext>();
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment()) app.UseHsts();

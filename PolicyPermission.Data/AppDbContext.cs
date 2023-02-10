@@ -26,14 +26,14 @@ namespace PolicyPermission.Data
             return builder.ConnectionString;
         }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options, IOptions<IDbMeta> dbMetaOptions)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IOptions<IDbMeta> dbMetaOptions) : base(options)
         {
             _connectionString = GetConnString(dbMetaOptions.Value);
         }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured) optionsBuilder.UseNpgsql(_connectionString).UseLazyLoadingProxies();
+            if (!optionsBuilder.IsConfigured) optionsBuilder.UseLazyLoadingProxies().UseNpgsql(_connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

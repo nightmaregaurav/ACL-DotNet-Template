@@ -34,13 +34,13 @@ namespace PolicyPermission.Business.Services
         {
             var credential = await GetCredentialIfAnotherCredentialWithSameUsernameDoesNotExists(model.Username, model.Guid) ?? await _credentialRepository.GetByGuid(model.Guid) ?? throw new CredentialDoesNotExistsException();
             credential.Update(model.Username, model.Password);
-            _credentialRepository.Update(credential);
+            await _credentialRepository.Update(credential);
         }
 
         public async Task DeleteCredential(Guid guid)
         {
             var credential = await _credentialRepository.GetByGuid(guid) ?? throw new CredentialDoesNotExistsException();
-            _credentialRepository.Remove(credential);
+            await _credentialRepository.Remove(credential);
         }
 
         public async Task<IEnumerable<UserCredentialResponseModel>> GetAllCredentials()
