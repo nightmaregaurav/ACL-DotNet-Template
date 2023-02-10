@@ -9,10 +9,10 @@ namespace PolicyPermission.Data
         public static void UseDataDi(this IServiceCollection services)
         {
             services.AddTransient<AppDbContext>();
-
             
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserCredentialRepository, UserCredentialRepository>();
         }
     }
 }

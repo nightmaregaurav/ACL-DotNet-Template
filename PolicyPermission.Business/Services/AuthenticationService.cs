@@ -41,7 +41,7 @@ namespace PolicyPermission.Business.Services
             var token = JwtTokenGenerationHelper.CreateToken(claims, _jwtMeta);
             
             var identity = new ClaimsIdentity(claims, "Basic");
-            await _httpContextAccessor.HttpContext.SignInAsync(
+            if(_httpContextAccessor.HttpContext != null) await _httpContextAccessor.HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(identity),
                 new AuthenticationProperties
@@ -50,6 +50,7 @@ namespace PolicyPermission.Business.Services
                     IsPersistent = true
                 }
             );
+            
             return token;
         }
     }
