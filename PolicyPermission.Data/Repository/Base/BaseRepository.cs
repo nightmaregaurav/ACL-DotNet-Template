@@ -17,23 +17,45 @@ namespace PolicyPermission.Data.Repository.Base
             Queryable = _dbSet.AsQueryable();
         }
 
-        public async Task Add(T entity) => await _dbSet.AddAsync(entity);
-        public async Task AddRange(IEnumerable<T> entities) => await _dbSet.AddRangeAsync(entities);
-        
+        public async Task Add(T entity)
+        {
+            await _dbSet.AddAsync(entity);
+            Save();
+        }
+
+        public async Task AddRange(IEnumerable<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+            Save();
+        }
+
         public void Update(T entity)
         {
             _dbSet.Update(entity);
             Save();
         }
 
-        public void UpdateRange(IEnumerable<T> entities) => _dbSet.UpdateRange(entities);
-        
-        public void Remove(T entity) => _dbSet.Remove(entity);
-        public void RemoveRange(IEnumerable<T> entities) => _dbSet.RemoveRange(entities);
-        
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            _dbSet.UpdateRange(entities);
+            Save();
+        }
+
+        public void Remove(T entity)
+        {
+            _dbSet.Remove(entity);
+            Save();
+        }
+
+        public void RemoveRange(IEnumerable<T> entities)
+        {
+            _dbSet.RemoveRange(entities);
+            Save();
+        }
+
         public async Task<T?> GetById(int id) => await _dbSet.FindAsync(id);
         public async Task<IEnumerable<T>> GetAll() => await _dbSet.ToListAsync();
 
-        public void Save() => _db.SaveChangesAsync();
+        private void Save() => _db.SaveChangesAsync();
     }
 }

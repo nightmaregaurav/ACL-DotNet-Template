@@ -18,7 +18,7 @@ namespace PolicyPermission.Business.Services
 
         public async Task<Guid> AddRole(RoleAddRequestModel model)
         {
-            if (!await IsRoleWithSameNameExists(model.Name)) throw new RoleAlreadyExistsException();
+            if (await IsRoleWithSameNameExists(model.Name)) throw new RoleAlreadyExistsException();
             var role = new Role(model.Name, model.Description);
             await _roleRepository.Add(role);
             return role.Guid;
