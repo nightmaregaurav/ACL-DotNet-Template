@@ -9,5 +9,6 @@ namespace PolicyPermission.Abstraction.Business
         Task UpdateCredential(UserCredentialUpdateRequestModel model);
         Task DeleteCredential(Guid guid);
         Task<IEnumerable<UserCredentialResponseModel>> GetAllCredentials();
+        Task<UserCredentialResponseModel> GetCredentialByUserName(string username);
     }
 }

@@ -1,26 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
 using PolicyPermission.Abstraction.Business;
+using PolicyPermission.Contracts.RequestModels;
 
 namespace PolicyPermission.Controllers
 {
-    public class LoginController : ControllerBase
+    public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
 
-        public LoginController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
         }
-
-        // public Task<IActionResult> GetToken()
-        // {
-        //     
-        // }
+        
         [HttpPost]
         [ProducesResponseType(typeof(string), 200)]
-        public async Task<IActionResult> Login([FromBody] string userName, [FromBody] string password)
+        public async Task<IActionResult> Login(UserLoginRequestModel model)
         {
-            var token = await _authenticationService.Login(userName, password);
+            var token = await _authenticationService.Login(model);
             return Ok(token);
         }
     }
