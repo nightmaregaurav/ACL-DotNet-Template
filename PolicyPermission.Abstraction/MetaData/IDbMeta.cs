@@ -1,6 +1,6 @@
 namespace PolicyPermission.Abstraction.MetaData
 {
-    public class IDbMeta
+    public interface IDbMeta
     {
         public string UserName { get; set; }
         public string Password { get; set; }

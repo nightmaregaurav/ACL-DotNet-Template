@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Npgsql;
 using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Data.Configurations;
@@ -26,9 +25,9 @@ namespace PolicyPermission.Data
             return builder.ConnectionString;
         }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options, IOptions<IDbMeta> dbMetaOptions) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IDbMeta dbMetaOptions) : base(options)
         {
-            _connectionString = GetConnString(dbMetaOptions.Value);
+            _connectionString = GetConnString(dbMetaOptions);
         }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -40,6 +39,7 @@ namespace PolicyPermission.Data
         {
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new UserCredentialConfiguration());
         }
     }
 }

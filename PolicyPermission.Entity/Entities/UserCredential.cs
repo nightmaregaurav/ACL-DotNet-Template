@@ -6,7 +6,11 @@ namespace PolicyPermission.Entity.Entities
         public Guid Guid { get; }
         public string UserName { get; private set; }
         public string Password { get; private set; }
-        public User User { get; }
+        public virtual User User { get; }
+
+        protected UserCredential()
+        {
+        }
 
         public UserCredential(string userName, string password, User user)
         {
