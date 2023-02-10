@@ -5,9 +5,12 @@ namespace PolicyPermission.Entity.Entities
         private long Id { get; }
         public Guid Guid { get; }
         public string FullName { get; private set; }
-        public Role Role { get; private set; }
+        public virtual Role Role { get; private set; }
 
-
+        protected User()
+        {
+        }
+        
         public User(string fullName, Role role)
         {
             Guid = Guid.NewGuid();

@@ -4,6 +4,8 @@ using PolicyPermission.Contracts.RequestModels;
 
 namespace PolicyPermission.Controllers
 {
+    [ApiController]
+    [Route("/api/auth")]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
