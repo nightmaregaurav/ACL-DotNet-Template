@@ -13,8 +13,20 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions">
+        <HintPath>..\..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\6.0.11\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.AspNetCore.Authentication.Cookies">
+        <HintPath>..\..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\6.0.11\Microsoft.AspNetCore.Authentication.Cookies.dll</HintPath>
+      </Reference>
       <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
         <HintPath>..\..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\7.0.0\lib\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.IdentityModel.Tokens">
+        <HintPath>..\..\..\..\.nuget\packages\microsoft.identitymodel.tokens\6.10.0\lib\netstandard2.0\Microsoft.IdentityModel.Tokens.dll</HintPath>
+      </Reference>
+      <Reference Include="System.IdentityModel.Tokens.Jwt">
+        <HintPath>..\..\..\..\.nuget\packages\system.identitymodel.tokens.jwt\6.10.0\lib\netstandard2.0\System.IdentityModel.Tokens.Jwt.dll</HintPath>
       </Reference>
     </ItemGroup>
 

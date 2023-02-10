@@ -10,4 +10,8 @@
       <ProjectReference Include="..\PolicyPermission.Contracts\PolicyPermission.Contracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="7.0.2" />
+    </ItemGroup>
+
 </Project>

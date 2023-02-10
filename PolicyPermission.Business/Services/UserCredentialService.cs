@@ -1,6 +1,7 @@
 using PolicyPermission.Abstraction.Business;
 using PolicyPermission.Abstraction.Data;
 using PolicyPermission.Business.Exceptions;
+using PolicyPermission.Business.Helpers;
 using PolicyPermission.Contracts.RequestModels;
 using PolicyPermission.Contracts.ResponseModels;
 using PolicyPermission.Entity.Entities;
@@ -22,7 +23,9 @@ namespace PolicyPermission.Business.Services
         {
             if (await IsCredentialWithSameNameExists(model.Username)) throw new CredentialAlreadyExistsException();
             var user = await _userRepository.GetByGuid(model.User) ?? throw new UserDoesNotExistsException();
-            var credential = new UserCredential(model.Username, model.Password, user);
+
+            var passwordHash = PasswordHelper.CreateHash(model.Username, model.Password);
+            var credential = new UserCredential(model.Username, passwordHash, user);
             await _credentialRepository.Add(credential);
             return credential.Guid;
         }
@@ -51,7 +54,19 @@ namespace PolicyPermission.Business.Services
                 PasswordHash = x.Password
             });
         }
-        
+
+        public async Task<UserCredentialResponseModel> GetCredentialByUserName(string username)
+        {
+            var credential = await _credentialRepository.GetCredentialByUsername(username) ?? throw new CredentialDoesNotExistsException();
+            return new UserCredentialResponseModel
+            {
+                Guid = credential.Guid,
+                User = credential.User.Guid,
+                Username = credential.UserName,
+                PasswordHash = credential.Password
+            };
+        }
+
         private async Task<bool> IsCredentialWithSameNameExists(string userName)
         {
             var credential = await _credentialRepository.GetCredentialByUsername(userName);
