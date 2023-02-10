@@ -28,13 +28,13 @@ namespace PolicyPermission.Business.Services
         {
             var role = await GetRoleIfAnotherRoleWithSameNameDoesNotExists(model.Name, model.Guid) ?? await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
             role.Update(model.Name, model.Description);
-            _roleRepository.Update(role);
+            await _roleRepository.Update(role);
         }
 
         public async Task DeleteRole(Guid guid)
         {
             var role = await _roleRepository.GetByGuid(guid) ?? throw new RoleDoesNotExistsException();
-            _roleRepository.Remove(role);
+            await _roleRepository.Remove(role);
         }
 
         public async Task<IEnumerable<RoleResponseModel>> GetAllRoles()

@@ -12,7 +12,7 @@ namespace PolicyPermission.Data.Configurations
             builder.Property(x => x.Guid).IsRequired();
             builder.Property(x => x.FullName).IsRequired();
             
-            builder.HasOne(x => x.Role).WithMany();
+            builder.HasOne(x => x.Role).WithMany().IsRequired();
             
             builder.ToTable("users");
         }
