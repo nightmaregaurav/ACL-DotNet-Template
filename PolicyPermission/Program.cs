@@ -9,12 +9,20 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using PolicyPermission;
+using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Data;
 using PolicyPermission.Exceptions;
 using PolicyPermission.MetaData;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.UseDi();
+
+var dbSection = builder.Configuration.GetSection("DatabaseOption");
+var jwtSection = builder.Configuration.GetSection("JwtOption");
+var jwtOption = jwtSection.Get<JwtMeta>() ?? throw new JwtOptionsNotConfiguredException();
+
+builder.Services.Configure<IDbMeta>(dbSection);
+builder.Services.Configure<IJwtMeta>(jwtSection);
 
 builder.Services.AddControllers().AddJsonOptions(jsonOption => jsonOption.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
@@ -43,12 +51,6 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-
-var jwtSection = builder.Configuration.GetSection("JwtOption");
-var jwtOption = jwtSection.Get<JwtMeta>() ?? throw new DatabaseOptionsNotConfiguredException();
-
-builder.Services.Configure<JwtMeta>(jwtSection);
-builder.Services.Configure<DbMeta>(builder.Configuration.GetSection("DatabaseOption"));
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(x => {

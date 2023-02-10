@@ -57,7 +57,6 @@ namespace PolicyPermission.Business.Services
             //         IsPersistent = true
             //     }).ConfigureAwait(true);
             //
-            // Console.WriteLine(clientToken);
             //
             // ViewBag.Token = clientToken;
             // ViewBag.RetUrl = retUrl;

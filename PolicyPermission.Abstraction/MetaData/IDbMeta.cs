@@ -1,4 +1,4 @@
-namespace PolicyPermission.Abstraction
+namespace PolicyPermission.Abstraction.MetaData
 {
     public class IDbMeta
     {

@@ -1,4 +1,4 @@
-using PolicyPermission.Abstraction;
+using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Business;
 using PolicyPermission.Data;
 using PolicyPermission.MetaData;
