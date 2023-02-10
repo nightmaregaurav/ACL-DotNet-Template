@@ -6,7 +6,7 @@ using PolicyPermission.Contracts.ResponseModels;
 namespace PolicyPermission.Controllers
 {
     [ApiController]
-    [Route("/api/users")]
+    [Route("/api/credentials")]
     public class UserCredentialsController : ControllerBase
     {
         private readonly IUserCredentialService _credentialService;
