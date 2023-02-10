@@ -47,5 +47,13 @@ namespace PolicyPermission.Controllers
             await _userService.DeleteUser(guid);
             return Ok();
         }
+        
+        [HttpPatch]
+        [ProducesResponseType(typeof(void), 200)]
+        public async Task<IActionResult> Patch(UserPermissionSetRequestModel model)
+        {
+            await _userService.SetPermissionsToUser(model);
+            return Ok();
+        }
     }
 }

@@ -9,5 +9,6 @@ namespace PolicyPermission.Abstraction.Business
         Task UpdateUser(UserUpdateRequestModel model);
         Task DeleteUser(Guid guid);
         Task<IEnumerable<UserResponseModel>> GetAllUsers();
+        Task SetPermissionsToUser(UserPermissionSetRequestModel model);
     }
 }

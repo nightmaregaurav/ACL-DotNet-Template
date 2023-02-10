@@ -44,10 +44,18 @@ namespace PolicyPermission.Business.Services
             {
                 Guid = role.Guid,
                 Name = role.Name,
-                Description = role.Description  
+                Description = role.Description,
+                Permissions = role.GetPermissions()
             });
         }
-        
+
+        public async Task SetPermissionsToRole(RolePermissionSetRequestModel model)
+        {
+            var role = await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
+            role.SetPermissions(model.Permissions);
+            await _roleRepository.Update(role);
+        }
+
         private async Task<bool> IsRoleWithSameNameExists(string roleName)
         {
             var role = await _roleRepository.GetRoleByName(roleName);

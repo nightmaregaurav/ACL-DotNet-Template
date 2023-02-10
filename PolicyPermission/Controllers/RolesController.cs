@@ -47,5 +47,13 @@ namespace PolicyPermission.Controllers
             await _roleService.DeleteRole(guid);
             return Ok();
         }
+        
+        [HttpPatch]
+        [ProducesResponseType(typeof(void), 200)]
+        public async Task<IActionResult> Patch(RolePermissionSetRequestModel model)
+        {
+            await _roleService.SetPermissionsToRole(model);
+            return Ok();
+        }
     }
 }
