@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PolicyPermission.Abstraction.Business;
 using PolicyPermission.Contracts.RequestModels;
@@ -5,6 +6,7 @@ using PolicyPermission.Contracts.ResponseModels;
 
 namespace PolicyPermission.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("/api/credentials")]
     public class UserCredentialsController : ControllerBase
