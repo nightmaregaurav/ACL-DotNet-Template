@@ -33,7 +33,7 @@ namespace PolicyPermission.Data
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured) optionsBuilder.UseNpgsql(_connectionString);
+            if (!optionsBuilder.IsConfigured) optionsBuilder.UseNpgsql(_connectionString).UseLazyLoadingProxies();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
