@@ -3,7 +3,7 @@ using PolicyPermission.Exceptions;
 
 namespace PolicyPermission.MetaData
 {
-    public class DbMeta : IDbMeta
+    internal class DbMeta : IDbMeta
     {
         public string UserName { get; set; }
         public string Password { get; set; }
