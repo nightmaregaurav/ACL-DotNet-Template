@@ -11,6 +11,7 @@ namespace PolicyPermission.Business
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserCredentialService, UserCredentialService>();
         }
     }
 }
