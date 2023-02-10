@@ -9,20 +9,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using PolicyPermission;
-using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Data;
 using PolicyPermission.Exceptions;
-using PolicyPermission.MetaData;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.UseDi();
-
-var dbSection = builder.Configuration.GetSection("DatabaseOption");
-var jwtSection = builder.Configuration.GetSection("JwtOption");
-var jwtOption = jwtSection.Get<JwtMeta>() ?? throw new JwtOptionsNotConfiguredException();
-
-builder.Services.Configure<IDbMeta>(dbSection);
-builder.Services.Configure<IJwtMeta>(jwtSection);
 
 builder.Services.AddControllers().AddJsonOptions(jsonOption => jsonOption.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
@@ -52,6 +43,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+var jwtIssuer = builder.Configuration["JwtOption:Issuer"];
+var jwtAudience = builder.Configuration["JwtOption:Audience"];
+var jwtKey = builder.Configuration["JwtOption:Key"];
+var jwtExpiryMinutes = builder.Configuration["JwtOption:ExpiryMinutes"];
+if(string.IsNullOrWhiteSpace(jwtIssuer) || string.IsNullOrWhiteSpace(jwtAudience) || string.IsNullOrWhiteSpace(jwtKey) || string.IsNullOrWhiteSpace(jwtExpiryMinutes)) throw new JwtOptionsNotConfiguredException();
+
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(x => {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -66,13 +63,13 @@ builder.Services.AddAuthentication(x => {
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtOption.Issuer,
-        ValidAudience = jwtOption.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOption.Key))
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
 }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 {
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(jwtOption.ExpiryMinutes);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(int.Parse(jwtExpiryMinutes));
 });
 
 builder.Services.AddCors(corsOptions => corsOptions.AddDefaultPolicy(policy => policy.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(_ => true).AllowCredentials()));

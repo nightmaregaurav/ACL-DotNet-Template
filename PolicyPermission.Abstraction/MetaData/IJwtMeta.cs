@@ -1,6 +1,6 @@
 namespace PolicyPermission.Abstraction.MetaData
 {
-    public class IJwtMeta
+    public interface IJwtMeta
     {
         public string Issuer { get; init; }
         public string Audience { get; init; }
