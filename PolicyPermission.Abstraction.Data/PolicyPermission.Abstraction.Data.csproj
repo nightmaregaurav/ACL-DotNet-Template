@@ -10,4 +10,8 @@
       <ProjectReference Include="..\PolicyPermission.Entity\PolicyPermission.Entity.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.2" />
+    </ItemGroup>
+
 </Project>
