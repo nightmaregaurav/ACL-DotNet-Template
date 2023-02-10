@@ -25,14 +25,14 @@ namespace PolicyPermission.Controllers
         
         [HttpPost]
         [ProducesResponseType(typeof(Guid), 200)]
-        public async Task<IActionResult> Post([FromBody] UserAddRequestModel model)
+        public async Task<IActionResult> Post(UserAddRequestModel model)
         {
             return Ok(await _userService.AddUser(model));
         }
         
         [HttpPut]
         [ProducesResponseType(typeof(void), 200)]
-        public async Task<IActionResult> Put([FromBody] UserUpdateRequestModel model)
+        public async Task<IActionResult> Put(UserUpdateRequestModel model)
         {
             await _userService.UpdateUser(model);
             return Ok();
@@ -40,7 +40,7 @@ namespace PolicyPermission.Controllers
         
         [HttpDelete]
         [ProducesResponseType(typeof(void), 200)]
-        public async Task<IActionResult> Delete([FromBody] Guid guid)
+        public async Task<IActionResult> Delete(Guid guid)
         {
             await _userService.DeleteUser(guid);
             return Ok();
