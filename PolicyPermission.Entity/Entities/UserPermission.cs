@@ -2,6 +2,7 @@ namespace PolicyPermission.Entity.Entities
 {
     public class UserPermission
     {
+        private long Id { get; }
         public Guid Guid { get; }
         public User User { get; }
         public string Permission { get; }
