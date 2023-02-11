@@ -26,7 +26,8 @@ namespace PolicyPermission.Business.Services
 
         public async Task UpdateRole(RoleUpdateRequestModel model)
         {
-            var role = await GetRoleIfAnotherRoleWithSameNameDoesNotExists(model.Name, model.Guid) ?? await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
+            var role = await GetRoleIfAnotherRoleWithSameNameDoesNotExists(model.Name, model.Guid) ??
+                       await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
             role.Update(model.Name, model.Description);
             await _roleRepository.Update(role);
         }
@@ -56,19 +57,25 @@ namespace PolicyPermission.Business.Services
             await _roleRepository.Update(role);
         }
 
+        public async Task<IEnumerable<string>> GetPermissions(Guid guid)
+        {
+            var role = await _roleRepository.GetByGuid(guid) ?? throw new RoleDoesNotExistsException();
+            return role.GetPermissions();
+        }
+
         private async Task<bool> IsRoleWithSameNameExists(string roleName)
         {
             var role = await _roleRepository.GetRoleByName(roleName);
             return role != null;
         }
-        
+
         private async Task<Role?> GetRoleIfAnotherRoleWithSameNameDoesNotExists(string roleName, Guid guid)
         {
             var role = await _roleRepository.GetRoleByName(roleName);
             if (role == null) return null;
-            
+
             if (role.Guid != guid) throw new RoleAlreadyExistsException();
-            
+
             return role;
         }
     }

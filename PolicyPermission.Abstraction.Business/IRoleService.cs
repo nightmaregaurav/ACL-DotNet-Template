@@ -10,5 +10,6 @@ namespace PolicyPermission.Abstraction.Business
         Task DeleteRole(Guid guid);
         Task<IEnumerable<RoleResponseModel>> GetAllRoles();
         Task SetPermissionsToRole(RolePermissionSetRequestModel model);
+        Task<IEnumerable<string>> GetPermissions(Guid guid);
     }
 }

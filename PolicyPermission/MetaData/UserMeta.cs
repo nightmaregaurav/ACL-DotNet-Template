@@ -4,6 +4,6 @@ namespace PolicyPermission.MetaData
 {
     internal class UserMeta : IUserMeta
     {
-        
+        public Guid Guid { get; init; }
     }
 }
