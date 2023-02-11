@@ -68,7 +68,6 @@ namespace PolicyPermission.Authorization
         
         public static IEnumerable<string> ListScopes() => GetUsedPermissionsInAssembly(Assembly.GetExecutingAssembly()).Keys;
         public static IEnumerable<string> ListPermissions() => GetUsedPermissionsInAssembly(Assembly.GetExecutingAssembly()).Values.SelectMany(x => x);
-        public static IEnumerable<string> ListPermissions(string scope) => GetUsedPermissionsInAssembly(Assembly.GetExecutingAssembly())[scope];
         public static IDictionary<string, IEnumerable<string>> GetPermissionMap() => GetUsedPermissionsInAssembly(Assembly.GetExecutingAssembly());
     }
     
