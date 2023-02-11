@@ -12,8 +12,8 @@ using PolicyPermission.Data;
 namespace PolicyPermission.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230210084157_user_entity_FK_1")]
-    partial class userentityFK1
+    [Migration("20230211150510_Bundle_0001")]
+    partial class Bundle0001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,9 @@ namespace PolicyPermission.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Permissions")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("roles", (string)null);
@@ -67,6 +70,9 @@ namespace PolicyPermission.Data.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Permissions")
+                        .HasColumnType("text");
+
                     b.Property<long>("RoleId")
                         .HasColumnType("bigint");
 
@@ -75,6 +81,35 @@ namespace PolicyPermission.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("PolicyPermission.Entity.Entities.UserCredential", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("user_credentials", (string)null);
                 });
 
             modelBuilder.Entity("PolicyPermission.Entity.Entities.User", b =>
@@ -86,6 +121,17 @@ namespace PolicyPermission.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("PolicyPermission.Entity.Entities.UserCredential", b =>
+                {
+                    b.HasOne("PolicyPermission.Entity.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
