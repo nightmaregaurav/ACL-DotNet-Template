@@ -11,6 +11,7 @@ namespace PolicyPermission
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IJwtMeta, JwtMeta>();
+            services.AddSingleton<IPermissionMeta, PermissionMeta>();
 
             services.AddScoped<IDbMeta, DbMeta>();
             services.AddScoped<IUserMeta, UserMeta>();
