@@ -4,7 +4,7 @@ namespace PolicyPermission.MetaData
 {
     internal class UserMeta : IUserMeta
     {
-        public Guid Guid { get; init; }
+        public Guid Guid { get; }
         
         public UserMeta(IHttpContextAccessor accessor)
         {
