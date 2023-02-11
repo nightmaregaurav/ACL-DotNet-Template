@@ -51,7 +51,7 @@ namespace PolicyPermission.Business.Services
                 Guid = user.Guid,
                 FullName = user.FullName,
                 Role = user.Role.Name,
-                Permissions = user.Role.GetPermissions()
+                Permissions = user.GetPermissions().Concat(user.Role.GetPermissions()).Distinct()
             });
         }
 
@@ -82,6 +82,17 @@ namespace PolicyPermission.Business.Services
         {
             var user = await _userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
             return user.Role.GetPermissions();
+        }
+
+        public async Task<IEnumerable<string>> GetAllPermissions()
+        {
+            return await GetAllPermissions(_userMeta.Guid);
+        }
+
+        public async Task<IEnumerable<string>> GetAllPermissions(Guid guid)
+        {
+            var user = await _userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
+            return user.GetPermissions().Concat(user.Role.GetPermissions()).Distinct();
         }
     }
 }

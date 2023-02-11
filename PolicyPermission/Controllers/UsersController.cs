@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PolicyPermission.Abstraction.Business;
 using PolicyPermission.Contracts.RequestModels;
@@ -6,7 +5,6 @@ using PolicyPermission.Contracts.ResponseModels;
 
 namespace PolicyPermission.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("/api/users")]
     public class UsersController : ControllerBase
@@ -38,6 +36,13 @@ namespace PolicyPermission.Controllers
         {
             return Ok(await _userService.GetPermissionsInheritedFromRole());
         }
+        
+        [HttpGet("all-permissions")]
+        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
+        public async Task<IActionResult> GetAllPermissions()
+        {
+            return Ok(await _userService.GetAllPermissions());
+        }
 
         [HttpGet("{guid}/permissions")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
@@ -51,6 +56,13 @@ namespace PolicyPermission.Controllers
         public async Task<IActionResult> GetRolePermissions(Guid guid)
         {
             return Ok(await _userService.GetPermissionsInheritedFromRole(guid));
+        }
+        
+        [HttpGet("{guid}/all-permissions")]
+        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
+        public async Task<IActionResult> GetAllPermissions(Guid guid)
+        {
+            return Ok(await _userService.GetAllPermissions(guid));
         }
 
         [HttpPost]
