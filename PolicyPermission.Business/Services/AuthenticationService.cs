@@ -26,7 +26,7 @@ namespace PolicyPermission.Business.Services
         
         public async Task<string> Login(UserLoginRequestModel model)
         {
-            var credential = await _userCredentialRepository.GetCredentialByUsername(model.Username) ?? throw new CredentialDoesNotExistsException();
+            var credential = await _userCredentialRepository.GetByUsername(model.Username) ?? throw new CredentialDoesNotExistsException();
             var isValidHash = PasswordHelper.Validate(model.Username, model.Password, credential.Password);
 
             if (!isValidHash) throw new InvalidCredentialsException();

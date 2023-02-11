@@ -5,11 +5,11 @@ namespace PolicyPermission.Abstraction.Business
 {
     public interface IRoleService
     {
-        Task<Guid> AddRole(RoleAddRequestModel model);
-        Task UpdateRole(RoleUpdateRequestModel model);
-        Task DeleteRole(Guid guid);
-        Task<IEnumerable<RoleResponseModel>> GetAllRoles();
-        Task SetPermissionsToRole(RolePermissionSetRequestModel model);
+        Task<Guid> Add(RoleAddRequestModel model);
+        Task Update(RoleUpdateRequestModel model);
+        Task Delete(Guid guid);
+        Task<IEnumerable<RoleResponseModel>> GetAll();
+        Task SetPermissions(RolePermissionSetRequestModel model);
         Task<IEnumerable<string>> GetPermissions(Guid guid);
     }
 }

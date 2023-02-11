@@ -22,7 +22,7 @@ namespace PolicyPermission.Controllers
         [ProducesResponseType(typeof(IEnumerable<RoleResponseModel>), 200)]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _roleService.GetAllRoles());
+            return Ok(await _roleService.GetAll());
         }
 
         [HttpGet("{guid}/permissions")]
@@ -36,14 +36,14 @@ namespace PolicyPermission.Controllers
         [ProducesResponseType(typeof(Guid), 200)]
         public async Task<IActionResult> Post(RoleAddRequestModel model)
         {
-            return Ok(await _roleService.AddRole(model));
+            return Ok(await _roleService.Add(model));
         }
 
         [HttpPut]
         [ProducesResponseType(typeof(void), 200)]
         public async Task<IActionResult> Put(RoleUpdateRequestModel model)
         {
-            await _roleService.UpdateRole(model);
+            await _roleService.Update(model);
             return Ok();
         }
 
@@ -51,7 +51,7 @@ namespace PolicyPermission.Controllers
         [ProducesResponseType(typeof(void), 200)]
         public async Task<IActionResult> Delete(Guid guid)
         {
-            await _roleService.DeleteRole(guid);
+            await _roleService.Delete(guid);
             return Ok();
         }
 
@@ -59,7 +59,7 @@ namespace PolicyPermission.Controllers
         [ProducesResponseType(typeof(void), 200)]
         public async Task<IActionResult> Patch(RolePermissionSetRequestModel model)
         {
-            await _roleService.SetPermissionsToRole(model);
+            await _roleService.SetPermissions(model);
             return Ok();
         }
     }

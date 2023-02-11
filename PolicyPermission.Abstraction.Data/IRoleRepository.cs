@@ -7,6 +7,6 @@ namespace PolicyPermission.Abstraction.Data
     {
         new Task<Role?> GetById(int id);
         Task<Role?> GetByGuid(Guid guid);
-        Task<Role?> GetRoleByName(string roleName);
+        Task<Role?> GetByName(string roleName);
     }
 }
