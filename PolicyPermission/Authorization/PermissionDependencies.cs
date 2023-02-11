@@ -18,11 +18,6 @@ namespace PolicyPermission.Authorization
             ),
         };
         
-        public static IEnumerable<string> ListDependencies(string permission)
-        {
-            return Map.Where(x => x.Permission == Enum.Parse<Permission>(permission)).SelectMany(x => x.Dependencies.Select(y => y.ToString())).Distinct();
-        }
-        
         public static IDictionary<string, IEnumerable<string>> GetDependencyMap()
         {
             return Map.ToDictionary(x => x.Permission.ToString(), x => x.Dependencies.Select(y => y.ToString()));
