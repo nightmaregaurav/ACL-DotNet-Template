@@ -5,10 +5,9 @@ namespace PolicyPermission.Abstraction.Business
 {
     public interface IUserCredentialService
     {
-        Task<Guid> AddCredential(UserCredentialAddRequestModel model);
-        Task UpdateCredential(UserCredentialUpdateRequestModel model);
-        Task DeleteCredential(Guid guid);
-        Task<IEnumerable<UserCredentialResponseModel>> GetAllCredentials();
-        Task<UserCredentialResponseModel> GetCredentialByUserName(string username);
+        Task<Guid> Add(UserCredentialAddRequestModel model);
+        Task Update(UserCredentialUpdateRequestModel model);
+        Task Delete(Guid guid);
+        Task<IEnumerable<UserCredentialResponseModel>> GetAll();
     }
 }

@@ -21,7 +21,7 @@ namespace PolicyPermission.Business.Services
             _roleRepository = roleRepository;
         }
 
-        public async Task<Guid> AddUser(UserAddRequestModel model)
+        public async Task<Guid> Add(UserAddRequestModel model)
         {
             var role = await _roleRepository.GetByGuid(model.Role) ?? throw new RoleDoesNotExistsException();
             var user = new User(model.FullName, role);
@@ -29,7 +29,7 @@ namespace PolicyPermission.Business.Services
             return role.Guid;
         }
 
-        public async Task UpdateUser(UserUpdateRequestModel model)
+        public async Task Update(UserUpdateRequestModel model)
         {
             var user = await _userRepository.GetByGuid(model.Guid) ?? throw new UserDoesNotExistsException();
             var role = await _roleRepository.GetByGuid(model.Role) ?? throw new RoleDoesNotExistsException();
@@ -37,13 +37,13 @@ namespace PolicyPermission.Business.Services
             await _userRepository.Update(user);
         }
 
-        public async Task DeleteUser(Guid guid)
+        public async Task Delete(Guid guid)
         {
             var user = await _userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
             await _userRepository.Remove(user);
         }
 
-        public async Task<IEnumerable<UserResponseModel>> GetAllUsers()
+        public async Task<IEnumerable<UserResponseModel>> GetAll()
         {
             var users = await _userRepository.GetAll();
             return users.Select(user => new UserResponseModel

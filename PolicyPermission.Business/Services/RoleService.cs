@@ -16,7 +16,7 @@ namespace PolicyPermission.Business.Services
             _roleRepository = roleRepository;
         }
 
-        public async Task<Guid> AddRole(RoleAddRequestModel model)
+        public async Task<Guid> Add(RoleAddRequestModel model)
         {
             if (await IsRoleWithSameNameExists(model.Name)) throw new RoleAlreadyExistsException();
             var role = new Role(model.Name, model.Description);
@@ -24,7 +24,7 @@ namespace PolicyPermission.Business.Services
             return role.Guid;
         }
 
-        public async Task UpdateRole(RoleUpdateRequestModel model)
+        public async Task Update(RoleUpdateRequestModel model)
         {
             var role = await GetRoleIfAnotherRoleWithSameNameDoesNotExists(model.Name, model.Guid) ??
                        await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
@@ -32,13 +32,13 @@ namespace PolicyPermission.Business.Services
             await _roleRepository.Update(role);
         }
 
-        public async Task DeleteRole(Guid guid)
+        public async Task Delete(Guid guid)
         {
             var role = await _roleRepository.GetByGuid(guid) ?? throw new RoleDoesNotExistsException();
             await _roleRepository.Remove(role);
         }
 
-        public async Task<IEnumerable<RoleResponseModel>> GetAllRoles()
+        public async Task<IEnumerable<RoleResponseModel>> GetAll()
         {
             var roles = await _roleRepository.GetAll();
             return roles.Select(role => new RoleResponseModel
@@ -50,7 +50,7 @@ namespace PolicyPermission.Business.Services
             });
         }
 
-        public async Task SetPermissionsToRole(RolePermissionSetRequestModel model)
+        public async Task SetPermissions(RolePermissionSetRequestModel model)
         {
             var role = await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
             role.SetPermissions(model.Permissions);
@@ -65,13 +65,13 @@ namespace PolicyPermission.Business.Services
 
         private async Task<bool> IsRoleWithSameNameExists(string roleName)
         {
-            var role = await _roleRepository.GetRoleByName(roleName);
+            var role = await _roleRepository.GetByName(roleName);
             return role != null;
         }
 
         private async Task<Role?> GetRoleIfAnotherRoleWithSameNameDoesNotExists(string roleName, Guid guid)
         {
-            var role = await _roleRepository.GetRoleByName(roleName);
+            var role = await _roleRepository.GetByName(roleName);
             if (role == null) return null;
 
             if (role.Guid != guid) throw new RoleAlreadyExistsException();

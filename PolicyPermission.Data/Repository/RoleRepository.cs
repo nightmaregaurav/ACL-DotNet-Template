@@ -12,6 +12,6 @@ namespace PolicyPermission.Data.Repository
         }
 
         public async Task<Role?> GetByGuid(Guid guid) => await Queryable.FirstOrDefaultAsync(x => x.Guid == guid);
-        public async Task<Role?> GetRoleByName(string roleName) => await Queryable.FirstOrDefaultAsync(x => x.Name == roleName);
+        public async Task<Role?> GetByName(string roleName) => await Queryable.FirstOrDefaultAsync(x => x.Name == roleName);
     }
 }

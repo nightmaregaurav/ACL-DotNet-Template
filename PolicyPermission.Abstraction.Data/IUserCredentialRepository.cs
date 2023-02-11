@@ -7,7 +7,7 @@ namespace PolicyPermission.Abstraction.Data
     {
         new Task<UserCredential?> GetById(int id);
         Task<UserCredential?> GetByGuid(Guid guid);
-        Task<UserCredential?> GetCredentialByUsername(string username);
-        Task<UserCredential?> GetCredentialByUser(Guid userGuid);
+        Task<UserCredential?> GetByUsername(string username);
+        Task<UserCredential?> GetByUser(Guid userGuid);
     }
 }

@@ -22,7 +22,7 @@ namespace PolicyPermission.Controllers
         [ProducesResponseType(typeof(IEnumerable<UserResponseModel>), 200)]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _userService.GetAllUsers());
+            return Ok(await _userService.GetAll());
         }
 
         [HttpGet("permissions")]
@@ -57,14 +57,14 @@ namespace PolicyPermission.Controllers
         [ProducesResponseType(typeof(Guid), 200)]
         public async Task<IActionResult> Post(UserAddRequestModel model)
         {
-            return Ok(await _userService.AddUser(model));
+            return Ok(await _userService.Add(model));
         }
 
         [HttpPut]
         [ProducesResponseType(typeof(void), 200)]
         public async Task<IActionResult> Put(UserUpdateRequestModel model)
         {
-            await _userService.UpdateUser(model);
+            await _userService.Update(model);
             return Ok();
         }
 
@@ -72,7 +72,7 @@ namespace PolicyPermission.Controllers
         [ProducesResponseType(typeof(void), 200)]
         public async Task<IActionResult> Delete(Guid guid)
         {
-            await _userService.DeleteUser(guid);
+            await _userService.Delete(guid);
             return Ok();
         }
 

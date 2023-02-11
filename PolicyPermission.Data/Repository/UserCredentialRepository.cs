@@ -12,7 +12,7 @@ namespace PolicyPermission.Data.Repository
         }
 
         public async Task<UserCredential?> GetByGuid(Guid guid) => await Queryable.FirstOrDefaultAsync(x => x.Guid == guid);
-        public async Task<UserCredential?> GetCredentialByUsername(string username) => await Queryable.FirstOrDefaultAsync(x => x.UserName == username);
-        public async Task<UserCredential?> GetCredentialByUser(Guid userGuid) => await Queryable.FirstOrDefaultAsync(x => x.User.Guid == userGuid);
+        public async Task<UserCredential?> GetByUsername(string username) => await Queryable.FirstOrDefaultAsync(x => x.UserName == username);
+        public async Task<UserCredential?> GetByUser(Guid userGuid) => await Queryable.FirstOrDefaultAsync(x => x.User.Guid == userGuid);
     }
 }
