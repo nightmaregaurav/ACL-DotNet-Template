@@ -2,7 +2,6 @@ using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Business;
 using PolicyPermission.Data;
 using PolicyPermission.MetaData;
-using IConfiguration = Castle.Core.Configuration.IConfiguration;
 
 namespace PolicyPermission
 {
@@ -12,10 +11,10 @@ namespace PolicyPermission
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IJwtMeta, JwtMeta>();
-            
+
             services.AddScoped<IDbMeta, DbMeta>();
             services.AddScoped<IUserMeta, UserMeta>();
-            
+
             services.UseDataDi();
             services.UseBusinessDi();
         }
