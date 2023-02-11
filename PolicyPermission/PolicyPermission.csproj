@@ -22,8 +22,4 @@
       <ProjectReference Include="..\PolicyPermission.Data\PolicyPermission.Data.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Attributes" />
-    </ItemGroup>
-
 </Project>

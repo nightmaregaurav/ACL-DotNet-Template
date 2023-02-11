@@ -14,5 +14,7 @@ namespace PolicyPermission.Abstraction.Business
         Task<IEnumerable<string>> GetPermissions();
         Task<IEnumerable<string>> GetPermissionsInheritedFromRole(Guid guid);
         Task<IEnumerable<string>> GetPermissionsInheritedFromRole();
+        Task<IEnumerable<string>> GetAllPermissions(Guid guid);
+        Task<IEnumerable<string>> GetAllPermissions();
     }
 }
