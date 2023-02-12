@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using PolicyPermission.Abstraction.Business;
 using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Exceptions;
-using PolicyPermission.Types;
 
 namespace PolicyPermission.Authorization
 {
