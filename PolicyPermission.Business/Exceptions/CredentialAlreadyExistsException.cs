@@ -4,7 +4,7 @@ namespace PolicyPermission.Business.Exceptions
 {
     internal class CredentialAlreadyExistsException : BaseException
     {
-        public CredentialAlreadyExistsException(Exception? innerException = null) : base("Credential Already Exists!", innerException)
+        public CredentialAlreadyExistsException(string message = "Credential Already Exists!", Exception? innerException = null) : base(message, innerException)
         {
         }
     }

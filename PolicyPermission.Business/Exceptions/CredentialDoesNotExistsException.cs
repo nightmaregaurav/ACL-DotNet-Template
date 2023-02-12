@@ -4,7 +4,7 @@ namespace PolicyPermission.Business.Exceptions
 {
     internal class CredentialDoesNotExistsException : BaseException
     {
-        public CredentialDoesNotExistsException(Exception? innerException = null) : base("Credential Does Not Exists!", innerException)
+        public CredentialDoesNotExistsException(string message = "Credential Does Not Exists!", Exception? innerException = null) : base(message, innerException)
         {
         }
     }
