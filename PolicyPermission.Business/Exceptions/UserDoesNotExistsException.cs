@@ -4,7 +4,7 @@ namespace PolicyPermission.Business.Exceptions
 {
     internal class UserDoesNotExistsException : BaseException
     {
-        public UserDoesNotExistsException(Exception? innerException = null) : base("User does not exist!", innerException)
+        public UserDoesNotExistsException(string message = "User does not exist!", Exception? innerException = null) : base(message, innerException)
         {
         }
     }

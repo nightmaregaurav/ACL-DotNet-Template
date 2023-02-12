@@ -2,12 +2,12 @@ namespace PolicyPermission.Types
 {
     public enum Permission
     {
-        AddPolicy,
-        DeletePolicy,
-        ViewPolicy,
+        Admin__AddPolicy,
+        Admin__DeletePolicy,
+        Admin__ViewPolicy,
         
-        AddUser,
-        DeleteUser,
-        ViewUser
+        User__AddUser,
+        User__DeleteUser,
+        User__ViewUser,
     }
 }
