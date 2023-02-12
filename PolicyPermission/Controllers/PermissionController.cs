@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Authorization;
-using PolicyPermission.Types;
 
 namespace PolicyPermission.Controllers
 {
