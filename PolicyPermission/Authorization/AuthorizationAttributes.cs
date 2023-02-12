@@ -1,8 +1,9 @@
-using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using PolicyPermission.Abstraction.Business;
 using PolicyPermission.Abstraction.MetaData;
+using PolicyPermission.Exceptions;
 using PolicyPermission.Types;
 
 namespace PolicyPermission.Authorization
@@ -14,7 +15,7 @@ namespace PolicyPermission.Authorization
 
         public RequirePermissionAttribute(Permission permission)
         {
-            Permission = permission.ToString();
+            Permission = permission.ToString().Split("__").Last();
         }
         
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -30,45 +31,34 @@ namespace PolicyPermission.Authorization
             var permissions = userService.GetAllPermissions().Result;
             if (!permissions.Contains(Permission)) context.Result = new ForbidResult();
         }
-        
-        private static IDictionary<string, IEnumerable<string>> GetUsedPermissionsInAssembly(Assembly assembly)
+
+        private static IDictionary<string, IEnumerable<string>> PermissionMap { get; } = SetPermissionMap();
+        private static IDictionary<string, IEnumerable<string>> SetPermissionMap()
         {
-            var controllerTypes = assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(ControllerBase)));
-
-            var map = new List<ScopePermission>();
-            foreach (var controllerType in controllerTypes)
-            {
-                var methodInfos = controllerType.GetMethods();
-                var attributeValues = new List<string>();
-                foreach (var methodInfo in methodInfos)
-                {
-                    var attributes = methodInfo.GetCustomAttributes(typeof(RequirePermissionAttribute), false);
-                    if (attributes.Length <= 0) continue;
-                    var attribute = (RequirePermissionAttribute)attributes[0];
-                    attributeValues.Add(attribute.Permission);
-                }
-                map.Add(new ScopePermission(
-                    controllerType.Name.Replace("Controller", ""),
-                    attributeValues.Distinct()
-                ));
-            }
+            var scopedPermissions = Enum.GetNames(typeof(Permission));
             
-            var finalMap = new Dictionary<string, IEnumerable<string>>();
-            var previousPermissions = new List<string>();
-            foreach (var item in map)
-            {
-                var key = item.Scope;
-                var value = item.Permissions.Where(x => !previousPermissions.Contains(x)).OrderBy(x => x).ToList();
-                previousPermissions.AddRange(value);
-                finalMap.Add(key, value);
-            }
+            var permissions = scopedPermissions.Select(x => x.Split("__").Last()).ToList();
+            var duplicatePermissions = permissions.Where(x => permissions.Count(y => y == x) > 1).ToList();
+            if (duplicatePermissions.Any()) throw new DuplicatePermissionException(duplicatePermissions);
+            
+            const string requiredPermissionPattern = "^[A-Z][a-zA-Z]*__[A-Z][a-zA-Z]*$";
+            var illegalPermissions = scopedPermissions.Where(x => !Regex.IsMatch(x, requiredPermissionPattern)).ToList();
+            if (illegalPermissions.Any()) throw new IllegalPermissionEnumNameException(illegalPermissions);
 
-            return finalMap;
+            IDictionary<string, IEnumerable<string>> permissionMap = new Dictionary<string, IEnumerable<string>>();
+            foreach (var scopedPermission in scopedPermissions)
+            {
+                var scope = scopedPermission.Split("__").First();
+                var permission = scopedPermission.Split("__").Last();
+                if (!permissionMap.ContainsKey(scope)) permissionMap.Add(scope, new List<string>());
+                permissionMap[scope] = permissionMap[scope].Append(permission);
+            }
+            return permissionMap;
         }
         
-        public static IEnumerable<string> ListScopes() => GetUsedPermissionsInAssembly(Assembly.GetExecutingAssembly()).Keys;
-        public static IEnumerable<string> ListPermissions() => GetUsedPermissionsInAssembly(Assembly.GetExecutingAssembly()).Values.SelectMany(x => x);
-        public static IDictionary<string, IEnumerable<string>> GetPermissionMap() => GetUsedPermissionsInAssembly(Assembly.GetExecutingAssembly());
+        public static IEnumerable<string> ListScopes() => PermissionMap.Keys;
+        public static IEnumerable<string> ListPermissions() => Enum.GetNames(typeof(Permission)).Select(x => x.Split("__").Last()).Distinct();
+        public static IDictionary<string, IEnumerable<string>> GetPermissionMap() => PermissionMap;
     }
     
     [AttributeUsage(AttributeTargets.Method)]
