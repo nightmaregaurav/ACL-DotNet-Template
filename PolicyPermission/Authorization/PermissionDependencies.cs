@@ -7,13 +7,13 @@ namespace PolicyPermission.Authorization
         private static readonly IEnumerable<PermissionDependency> Map = new PermissionDependency[]
         {
             new(
-                Permission.AddPolicy, new[] {
-                    Permission.ViewPolicy
+                Permission.Admin__AddPolicy, new[] {
+                    Permission.Admin__ViewPolicy
                 }
             ),
             new(
-                Permission.DeletePolicy, new[] {
-                    Permission.ViewPolicy
+                Permission.Admin__DeletePolicy, new[] {
+                    Permission.Admin__ViewPolicy
                 }
             ),
         };
