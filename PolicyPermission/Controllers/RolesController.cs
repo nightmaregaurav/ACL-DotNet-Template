@@ -54,11 +54,10 @@ namespace PolicyPermission.Controllers
         }
 
         [HttpPatch]
-        [ProducesResponseType(typeof(void), 200)]
+        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
         public async Task<IActionResult> Patch(RolePermissionSetRequestModel model)
         {
-            await _roleService.SetPermissions(model);
-            return Ok();
+            return Ok(await _roleService.SetAndGetNewPermissions(model));
         }
     }
 }
