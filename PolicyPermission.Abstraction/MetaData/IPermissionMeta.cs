@@ -9,5 +9,6 @@ namespace PolicyPermission.Abstraction.MetaData
 
         IEnumerable<string> ListPermissions(string scope);
         IEnumerable<string> ListDependencies(string permission);
+        IEnumerable<string> ListPermissionsWithDependencies(IEnumerable<string> permissions);
     }
 }

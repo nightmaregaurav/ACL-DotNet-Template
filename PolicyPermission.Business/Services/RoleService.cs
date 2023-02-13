@@ -58,7 +58,7 @@ namespace PolicyPermission.Business.Services
             var role = await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
             var invalidPermissions = model.Permissions.Except(_permissionMeta.Permissions).ToList();
             if(invalidPermissions.Any()) throw new InvalidPermissionException(invalidPermissions);
-            var permissionsWithDependencies = GetPermissionsWithDependencies(model.Permissions);
+            var permissionsWithDependencies = _permissionMeta.ListPermissionsWithDependencies(model.Permissions);
             role.SetPermissions(permissionsWithDependencies);
             await _roleRepository.Update(role);
             return role.GetPermissions();
@@ -68,24 +68,6 @@ namespace PolicyPermission.Business.Services
         {
             var role = await _roleRepository.GetByGuid(guid) ?? throw new RoleDoesNotExistsException();
             return role.GetPermissions();
-        }
-        
-        private IEnumerable<string> GetPermissionsWithDependencies(IEnumerable<string> permissions)
-        {
-            var permissionsWithDependencies = new List<string>();
-
-            int permissionCount = 0;
-            foreach (var permission in permissions)
-            {
-                permissionCount++;
-                permissionsWithDependencies.Add(permission);
-                
-                var dependencies = _permissionMeta.ListDependencies(permission);
-                permissionsWithDependencies.AddRange(dependencies);
-            }
-            var permissionSet = permissionsWithDependencies.Distinct().ToList();
-            
-            return permissionSet.Count == permissionCount ? permissionSet : GetPermissionsWithDependencies(permissionSet);
         }
 
         private async Task<bool> IsRoleWithSameNameExists(string roleName)
