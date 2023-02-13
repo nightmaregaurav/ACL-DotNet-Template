@@ -27,7 +27,7 @@ namespace PolicyPermission.Authorization
             }
             
             var userService = (context.HttpContext.RequestServices.GetService(typeof(IUserService)) as IUserService)!;
-            var permissions = userService.GetAllPermissions().Result;
+            var permissions = userService.GetPermissions().Result;
             if (!permissions.Contains(Permission)) context.Result = new ForbidResult();
         }
 
@@ -66,10 +66,12 @@ namespace PolicyPermission.Authorization
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var userMeta = (context.HttpContext.RequestServices.GetService(typeof(IUserMeta)) as IUserMeta)!;
-            if (userMeta.Guid != Guid.Empty)
+            if (userMeta.Guid == Guid.Empty) return;
+            var result = new ObjectResult(new {message = "You are already logged in."})
             {
-                context.Result = new ForbidResult();
-            }
+                StatusCode = StatusCodes.Status203NonAuthoritative
+            };
+            context.Result = result;
         }
     }
 }
