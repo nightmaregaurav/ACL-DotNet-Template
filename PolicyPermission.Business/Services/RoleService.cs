@@ -72,15 +72,20 @@ namespace PolicyPermission.Business.Services
         
         private IEnumerable<string> GetPermissionsWithDependencies(IEnumerable<string> permissions)
         {
-            var permissionList = permissions.ToList();
             var permissionsWithDependencies = new List<string>();
-            foreach (var permission in permissionList)
+
+            int permissionCount = 0;
+            foreach (var permission in permissions)
             {
+                permissionCount++;
                 permissionsWithDependencies.Add(permission);
+                
                 var dependencies = _permissionMeta.ListDependencies(permission);
                 permissionsWithDependencies.AddRange(dependencies);
             }
-            return permissionList.Concat(permissionsWithDependencies).Distinct();
+            var permissionSet = permissionsWithDependencies.Distinct().ToList();
+            
+            return permissionSet.Count == permissionCount ? permissionSet : GetPermissionsWithDependencies(permissionSet);
         }
 
         private async Task<bool> IsRoleWithSameNameExists(string roleName)
