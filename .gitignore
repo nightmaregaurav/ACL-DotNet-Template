@@ -454,3 +454,5 @@ $RECYCLE.BIN/
 
 **/.idea/
 **/appsettings.Development.json
+.vscode/
+.vs/
