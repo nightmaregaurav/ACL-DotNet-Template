@@ -27,6 +27,7 @@ namespace PolicyPermission.Business.Services
         {
             var role = await _roleRepository.GetByGuid(model.Role) ?? throw new RoleDoesNotExistsException();
             var user = new User(model.FullName, role);
+            user.SetPermissions(role.GetPermissions());
             await _userRepository.Add(user);
             return role.Guid;
         }
@@ -62,7 +63,7 @@ namespace PolicyPermission.Business.Services
             var user = await _userRepository.GetByGuid(model.Guid) ?? throw new UserDoesNotExistsException();
             var invalidPermissions = model.Permissions.Except(_permissionMeta.Permissions).ToList();
             if(invalidPermissions.Any()) throw new InvalidPermissionException(invalidPermissions);
-            var permissionWithDependencies = GetPermissionsWithDependencies(model.Permissions);
+            var permissionWithDependencies = _permissionMeta.ListPermissionsWithDependencies(model.Permissions);
             user.SetPermissions(permissionWithDependencies);
             await _userRepository.Update(user);
             return user.GetPermissions();
@@ -77,46 +78,6 @@ namespace PolicyPermission.Business.Services
         {
             var user = await _userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
             return user.GetPermissions();
-        }
-
-        public async Task<IEnumerable<string>> GetPermissionsInheritedFromRole()
-        {
-            return await GetPermissionsInheritedFromRole(_userMeta.Guid);
-        }
-
-        public async Task<IEnumerable<string>> GetPermissionsInheritedFromRole(Guid guid)
-        {
-            var user = await _userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
-            return user.Role.GetPermissions();
-        }
-
-        public async Task<IEnumerable<string>> GetAllPermissions()
-        {
-            return await GetAllPermissions(_userMeta.Guid);
-        }
-
-        public async Task<IEnumerable<string>> GetAllPermissions(Guid guid)
-        {
-            var user = await _userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
-            return user.GetPermissions().Concat(user.Role.GetPermissions()).Distinct();
-        }
-        
-        private IEnumerable<string> GetPermissionsWithDependencies(IEnumerable<string> permissions)
-        {
-            var permissionsWithDependencies = new List<string>();
-
-            int permissionCount = 0;
-            foreach (var permission in permissions)
-            {
-                permissionCount++;
-                permissionsWithDependencies.Add(permission);
-                
-                var dependencies = _permissionMeta.ListDependencies(permission);
-                permissionsWithDependencies.AddRange(dependencies);
-            }
-            var permissionSet = permissionsWithDependencies.Distinct().ToList();
-            
-            return permissionSet.Count == permissionCount ? permissionSet : GetPermissionsWithDependencies(permissionSet);
         }
     }
 }
