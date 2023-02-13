@@ -9,7 +9,7 @@ namespace PolicyPermission.Abstraction.Business
         Task Update(RoleUpdateRequestModel model);
         Task Delete(Guid guid);
         Task<IEnumerable<RoleResponseModel>> GetAll();
-        Task SetPermissions(RolePermissionSetRequestModel model);
+        Task<IEnumerable<string>> SetAndGetNewPermissions(RolePermissionSetRequestModel model);
         Task<IEnumerable<string>> GetPermissions(Guid guid);
     }
 }

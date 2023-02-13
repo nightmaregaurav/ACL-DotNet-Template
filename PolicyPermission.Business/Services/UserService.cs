@@ -13,12 +13,14 @@ namespace PolicyPermission.Business.Services
         private readonly IRoleRepository _roleRepository;
         private readonly IUserMeta _userMeta;
         private readonly IUserRepository _userRepository;
+        private readonly IPermissionMeta _permissionMeta;
 
-        public UserService(IUserMeta userMeta, IUserRepository userRepository, IRoleRepository roleRepository)
+        public UserService(IUserMeta userMeta, IUserRepository userRepository, IRoleRepository roleRepository, IPermissionMeta permissionMeta)
         {
             _userMeta = userMeta;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _permissionMeta = permissionMeta;
         }
 
         public async Task<Guid> Add(UserAddRequestModel model)
@@ -55,11 +57,15 @@ namespace PolicyPermission.Business.Services
             });
         }
 
-        public async Task SetPermissions(UserPermissionSetRequestModel model)
+        public async Task<IEnumerable<string>> SetAndGetNewPermissions(UserPermissionSetRequestModel model)
         {
             var user = await _userRepository.GetByGuid(model.Guid) ?? throw new UserDoesNotExistsException();
-            user.SetPermissions(model.Permissions);
+            var invalidPermissions = model.Permissions.Except(_permissionMeta.Permissions).ToList();
+            if(invalidPermissions.Any()) throw new InvalidPermissionException(invalidPermissions);
+            var permissionWithDependencies = GetPermissionsWithDependencies(model.Permissions);
+            user.SetPermissions(permissionWithDependencies);
             await _userRepository.Update(user);
+            return user.GetPermissions();
         }
 
         public async Task<IEnumerable<string>> GetPermissions()
@@ -93,6 +99,19 @@ namespace PolicyPermission.Business.Services
         {
             var user = await _userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
             return user.GetPermissions().Concat(user.Role.GetPermissions()).Distinct();
+        }
+        
+        private IEnumerable<string> GetPermissionsWithDependencies(IEnumerable<string> permissions)
+        {
+            var permissionList = permissions.ToList();
+            var permissionsWithDependencies = new List<string>();
+            foreach (var permission in permissionList)
+            {
+                permissionsWithDependencies.Add(permission);
+                var dependencies = _permissionMeta.ListDependencies(permission);
+                permissionsWithDependencies.AddRange(dependencies);
+            }
+            return permissionList.Concat(permissionsWithDependencies).Distinct();
         }
     }
 }
