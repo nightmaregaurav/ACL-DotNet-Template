@@ -18,6 +18,6 @@ namespace PolicyPermission.Authorization
             }
         };
 
-        public static IDictionary<string, IEnumerable<string>> GetDependencyMap() => Map.ToDictionary(x => x.Key.ToString(), x => x.Value.Select(y => y.ToString()));
+        public static IDictionary<string, IEnumerable<string>> GetDependencyMap() => Map.ToDictionary(x => x.Key.ToString().Split("__").Last(), x => x.Value.Select(y => y.ToString().Split("__").Last()));
     }
 }

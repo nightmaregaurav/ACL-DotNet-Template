@@ -1,5 +1,6 @@
 using PolicyPermission.Abstraction.Business;
 using PolicyPermission.Abstraction.Data;
+using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Business.Exceptions;
 using PolicyPermission.Contracts.RequestModels;
 using PolicyPermission.Contracts.ResponseModels;
@@ -10,10 +11,12 @@ namespace PolicyPermission.Business.Services
     internal class RoleService : IRoleService
     {
         private readonly IRoleRepository _roleRepository;
+        private readonly IPermissionMeta _permissionMeta;
 
-        public RoleService(IRoleRepository roleRepository)
+        public RoleService(IRoleRepository roleRepository, IPermissionMeta permissionMeta)
         {
             _roleRepository = roleRepository;
+            _permissionMeta = permissionMeta;
         }
 
         public async Task<Guid> Add(RoleAddRequestModel model)
@@ -50,17 +53,34 @@ namespace PolicyPermission.Business.Services
             });
         }
 
-        public async Task SetPermissions(RolePermissionSetRequestModel model)
+        public async Task<IEnumerable<string>> SetAndGetNewPermissions(RolePermissionSetRequestModel model)
         {
             var role = await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
-            role.SetPermissions(model.Permissions);
+            var invalidPermissions = model.Permissions.Except(_permissionMeta.Permissions).ToList();
+            if(invalidPermissions.Any()) throw new InvalidPermissionException(invalidPermissions);
+            var permissionsWithDependencies = GetPermissionsWithDependencies(model.Permissions);
+            role.SetPermissions(permissionsWithDependencies);
             await _roleRepository.Update(role);
+            return role.GetPermissions();
         }
 
         public async Task<IEnumerable<string>> GetPermissions(Guid guid)
         {
             var role = await _roleRepository.GetByGuid(guid) ?? throw new RoleDoesNotExistsException();
             return role.GetPermissions();
+        }
+        
+        private IEnumerable<string> GetPermissionsWithDependencies(IEnumerable<string> permissions)
+        {
+            var permissionList = permissions.ToList();
+            var permissionsWithDependencies = new List<string>();
+            foreach (var permission in permissionList)
+            {
+                permissionsWithDependencies.Add(permission);
+                var dependencies = _permissionMeta.ListDependencies(permission);
+                permissionsWithDependencies.AddRange(dependencies);
+            }
+            return permissionList.Concat(permissionsWithDependencies).Distinct();
         }
 
         private async Task<bool> IsRoleWithSameNameExists(string roleName)
