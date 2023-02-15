@@ -9,7 +9,17 @@
     }
   },
   "profiles": {
-    "PolicyPermission": {
+    "Http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5555",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
