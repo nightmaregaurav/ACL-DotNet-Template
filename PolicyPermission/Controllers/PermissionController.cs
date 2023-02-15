@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using PolicyPermission.Abstraction.MetaData;
-using PolicyPermission.Authorization;
 
 namespace PolicyPermission.Controllers
 {
@@ -31,7 +30,6 @@ namespace PolicyPermission.Controllers
 
         [HttpGet("list")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        [RequirePermission(Permission.Admin__ViewPolicy)]
         public Task<IActionResult> List()
         {
             return Task.FromResult<IActionResult>(Ok(_permissionMeta.Permissions));
@@ -39,7 +37,6 @@ namespace PolicyPermission.Controllers
         
         [HttpGet("list-scopes")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        [RequirePermission(Permission.Admin__ViewPolicy)]
         public Task<IActionResult> ListScopes()
         {
             return Task.FromResult<IActionResult>(Ok(_permissionMeta.Scopes));
@@ -47,7 +44,6 @@ namespace PolicyPermission.Controllers
         
         [HttpGet("dependencies")]
         [ProducesResponseType(typeof(IDictionary<string,IEnumerable<string>>), 200)]
-        [RequirePermission(Permission.Admin__ViewPolicy)]
         public Task<IActionResult> Dependencies()
         {
             return Task.FromResult<IActionResult>(Ok(_permissionMeta.PermissionDependencyMap));
@@ -55,7 +51,6 @@ namespace PolicyPermission.Controllers
         
         [HttpGet("{permission}/dependencies")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        [RequirePermission(Permission.Admin__ViewPolicy)]
         public Task<IActionResult> Dependencies(string permission)
         {
             return Task.FromResult<IActionResult>(Ok(_permissionMeta.ListDependencies(permission)));

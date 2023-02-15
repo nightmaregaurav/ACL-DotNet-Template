@@ -55,12 +55,18 @@ namespace PolicyPermission.Business.Services
 
         public async Task<IEnumerable<string>> SetAndGetNewPermissions(RolePermissionSetRequestModel model)
         {
+            model.Permissions = model.Permissions.Distinct().ToList();
+            
             var role = await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
             var invalidPermissions = model.Permissions.Except(_permissionMeta.Permissions).ToList();
             if(invalidPermissions.Any()) throw new InvalidPermissionException(invalidPermissions);
-            var permissionsWithDependencies = _permissionMeta.ListPermissionsWithDependencies(model.Permissions);
+            
+            var permissionsDependencies = _permissionMeta.ListPermissionsDependencies(model.Permissions);
+            var permissionsWithDependencies = model.Permissions.Union(permissionsDependencies);
+            
             role.SetPermissions(permissionsWithDependencies);
             await _roleRepository.Update(role);
+            
             return role.GetPermissions();
         }
 
