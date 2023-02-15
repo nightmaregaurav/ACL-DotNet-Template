@@ -1,4 +1,4 @@
-namespace PolicyPermission.Authorization
+namespace PolicyPermission.ACL
 {
     public enum Permission
     {
