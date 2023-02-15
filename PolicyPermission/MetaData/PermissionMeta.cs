@@ -1,5 +1,5 @@
 using PolicyPermission.Abstraction.MetaData;
-using PolicyPermission.Authorization;
+using PolicyPermission.ACL;
 
 namespace PolicyPermission.MetaData
 {
