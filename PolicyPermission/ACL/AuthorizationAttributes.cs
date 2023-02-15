@@ -5,7 +5,7 @@ using PolicyPermission.Abstraction.Business;
 using PolicyPermission.Abstraction.MetaData;
 using PolicyPermission.Exceptions;
 
-namespace PolicyPermission.Authorization
+namespace PolicyPermission.ACL
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class RequirePermissionAttribute : Attribute, IAuthorizationFilter
