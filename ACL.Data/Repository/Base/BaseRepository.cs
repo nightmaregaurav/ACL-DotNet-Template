@@ -1,9 +1,8 @@
-using ACL.Abstraction.Data.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace ACL.Data.Repository.Base
 {
-    internal class BaseRepository<T> : IBaseRepository<T> where T : class
+    internal class BaseRepository<T> where T : class
     {
         public IQueryable<T> Queryable { get; }
         
@@ -17,13 +16,13 @@ namespace ACL.Data.Repository.Base
             Queryable = _dbSet.AsQueryable();
         }
 
-        public async Task Add(T entity)
+        public async Task Insert(T entity)
         {
             await _dbSet.AddAsync(entity);
             await Save();
         }
 
-        public async Task AddRange(IEnumerable<T> entities)
+        public async Task InsertRange(IEnumerable<T> entities)
         {
             await _dbSet.AddRangeAsync(entities);
             await Save();
@@ -41,13 +40,13 @@ namespace ACL.Data.Repository.Base
             await Save();
         }
 
-        public async Task Remove(T entity)
+        public async Task Delete(T entity)
         {
             _dbSet.Remove(entity);
             await Save();
         }
 
-        public async Task RemoveRange(IEnumerable<T> entities)
+        public async Task DeleteRange(IEnumerable<T> entities)
         {
             _dbSet.RemoveRange(entities);
             await Save();

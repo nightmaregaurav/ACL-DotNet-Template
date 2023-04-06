@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT Authorization header. \r\n\r\n Enter 'Bearer'<space><token> in the text input below.\r\n\r\nExample: \"Bearer OurHardWorkAreProtectedByTheseWordsPleaseDontSteal(c)PremiumTechnologies\""
+        Description = "JWT Authorization header. \r\n\r\n Enter 'Bearer'[space][token] in the text input below.\r\n\r\nExample: \"Bearer OurHardWorkAreProtectedByTheseWordsPleaseDontSteal(c)nightmare\""
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement {
         {
@@ -114,7 +114,9 @@ app.UseExceptionHandler(options => {
 });
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();app.UseSwagger(c => c.RouteTemplate = "/swagger/{documentName}/swagger.json");
+app.UseStaticFiles();
+
+app.UseSwagger(c => c.RouteTemplate = "/swagger/{documentName}/swagger.json");
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Policy Permission");

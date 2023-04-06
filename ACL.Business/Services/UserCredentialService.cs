@@ -26,7 +26,7 @@ namespace ACL.Business.Services
 
             var passwordHash = PasswordHelper.CreateHash(model.Username, model.Password);
             var credential = new UserCredential(model.Username, passwordHash, user);
-            await _credentialRepository.Add(credential);
+            await _credentialRepository.Insert(credential);
             return credential.Guid;
         }
 
@@ -43,7 +43,7 @@ namespace ACL.Business.Services
         {
             var credential = await _credentialRepository.GetByGuid(guid) ??
                              throw new CredentialDoesNotExistsException();
-            await _credentialRepository.Remove(credential);
+            await _credentialRepository.Delete(credential);
         }
 
         public async Task<IEnumerable<UserCredentialResponseModel>> GetAll()

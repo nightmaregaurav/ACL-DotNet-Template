@@ -28,7 +28,7 @@ namespace ACL.Business.Services
             var role = await _roleRepository.GetByGuid(model.Role) ?? throw new RoleDoesNotExistsException();
             var user = new User(model.FullName, role);
             user.SetPermissions(role.GetPermissions());
-            await _userRepository.Add(user);
+            await _userRepository.Insert(user);
             return role.Guid;
         }
 
@@ -43,7 +43,7 @@ namespace ACL.Business.Services
         public async Task Delete(Guid guid)
         {
             var user = await _userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
-            await _userRepository.Remove(user);
+            await _userRepository.Delete(user);
         }
 
         public async Task<IEnumerable<UserResponseModel>> GetAll()
