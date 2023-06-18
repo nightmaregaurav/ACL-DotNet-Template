@@ -23,7 +23,7 @@ namespace ACL.Business.Services
         {
             if (await IsRoleWithSameNameExists(model.Name)) throw new RoleAlreadyExistsException();
             var role = new Role(model.Name, model.Description);
-            await _roleRepository.Add(role);
+            await _roleRepository.Insert(role);
             return role.Guid;
         }
 
@@ -38,7 +38,7 @@ namespace ACL.Business.Services
         public async Task Delete(Guid guid)
         {
             var role = await _roleRepository.GetByGuid(guid) ?? throw new RoleDoesNotExistsException();
-            await _roleRepository.Remove(role);
+            await _roleRepository.Delete(role);
         }
 
         public async Task<IEnumerable<RoleResponseModel>> GetAll()
