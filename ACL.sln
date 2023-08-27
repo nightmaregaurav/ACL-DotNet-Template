@@ -1,20 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL", "ACL\ACL.csproj", "{360480DE-240A-4146-879A-77F616B69578}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{360480DE-240A-4146-879A-77F616B69578}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL.Entity", "ACL.Entity\ACL.Entity.csproj", "{219D2F43-0591-4140-8066-F70E1EBFF368}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Entity", "Data.Entity\Data.Entity.csproj", "{219D2F43-0591-4140-8066-F70E1EBFF368}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL.Abstraction", "ACL.Abstraction\ACL.Abstraction.csproj", "{A05355DF-64D2-41AC-A438-0E7DA54BB918}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstraction", "Abstraction\Abstraction.csproj", "{A05355DF-64D2-41AC-A438-0E7DA54BB918}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL.Abstraction.Data", "ACL.Abstraction.Data\ACL.Abstraction.Data.csproj", "{AE720A23-438A-4D44-B220-F2BB494FBD6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Abstraction", "Data.Abstraction\Data.Abstraction.csproj", "{AE720A23-438A-4D44-B220-F2BB494FBD6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL.Abstraction.Business", "ACL.Abstraction.Business\ACL.Abstraction.Business.csproj", "{88C4E6E7-EA2E-4893-B0E3-5FC282F9A0E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.Abstraction", "Business.Abstraction\Business.Abstraction.csproj", "{88C4E6E7-EA2E-4893-B0E3-5FC282F9A0E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL.Business", "ACL.Business\ACL.Business.csproj", "{F5ECD414-BBA8-4202-9578-10EAA95C44A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{F5ECD414-BBA8-4202-9578-10EAA95C44A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL.Contracts", "ACL.Contracts\ACL.Contracts.csproj", "{48895356-14D9-4394-8B35-6A6FE34583DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.Contracts", "Business.Contracts\Business.Contracts.csproj", "{48895356-14D9-4394-8B35-6A6FE34583DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACL.Data", "ACL.Data\ACL.Data.csproj", "{F39427C7-B16C-4CE8-85B3-12F97F2570CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{F39427C7-B16C-4CE8-85B3-12F97F2570CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
