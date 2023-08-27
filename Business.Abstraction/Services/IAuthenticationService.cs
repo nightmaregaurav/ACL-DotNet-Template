@@ -1,6 +1,6 @@
 using Business.Contracts.RequestModels;
 
-namespace Business.Abstraction
+namespace Business.Abstraction.Services
 {
     public interface IAuthenticationService
     {

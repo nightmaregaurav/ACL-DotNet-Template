@@ -1,8 +1,6 @@
-using Abstraction.MetaData;
-
 namespace Api.MetaData
 {
-    internal class UserMeta : IUserMeta
+    public class UserMeta
     {
         public Guid Guid { get; }
         

@@ -1,7 +1,7 @@
 using Business.Contracts.RequestModels;
 using Business.Contracts.ResponseModels;
 
-namespace Business.Abstraction
+namespace Business.Abstraction.Services
 {
     public interface IUserService
     {
@@ -11,6 +11,5 @@ namespace Business.Abstraction
         Task<IEnumerable<UserResponseModel>> GetAll();
         Task<IEnumerable<string>> SetAndGetNewPermissions(UserPermissionSetRequestModel model);
         Task<IEnumerable<string>> GetPermissions(Guid guid);
-        Task<IEnumerable<string>> GetPermissions();
     }
 }

@@ -1,4 +1,4 @@
-using Data.Abstraction;
+using Data.Abstraction.Repositories;
 using Data.Entity.Entities;
 using Data.Repository.Base;
 using Microsoft.EntityFrameworkCore;

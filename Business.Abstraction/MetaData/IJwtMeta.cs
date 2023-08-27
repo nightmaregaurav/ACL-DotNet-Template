@@ -1,4 +1,4 @@
-namespace Abstraction.MetaData
+namespace Business.Abstraction.MetaData
 {
     public interface IJwtMeta
     {

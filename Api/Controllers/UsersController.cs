@@ -1,4 +1,5 @@
-using Business.Abstraction;
+using Api.MetaData;
+using Business.Abstraction.Services;
 using Business.Contracts.RequestModels;
 using Business.Contracts.ResponseModels;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly UserMeta _userMeta;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, UserMeta userMeta)
         {
             _userService = userService;
+            _userMeta = userMeta;
         }
 
         [HttpGet]
@@ -27,7 +30,7 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
         public async Task<IActionResult> GetPermissions()
         {
-            return Ok(await _userService.GetPermissions());
+            return Ok(await _userService.GetPermissions(_userMeta.Guid));
         }
 
         [HttpGet("{guid}/permissions")]

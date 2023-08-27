@@ -1,6 +1,6 @@
 using Data.Entity.Entities;
 
-namespace Data.Abstraction
+namespace Data.Abstraction.Repositories
 {
     public interface IUserCredentialRepository
     {

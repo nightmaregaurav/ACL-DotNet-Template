@@ -1,9 +1,9 @@
-using Business.Abstraction;
-using Data.Abstraction;
-using Abstraction.MetaData;
+using Business.Abstraction.Helpers;
+using Business.Abstraction.Services;
 using Business.Contracts.RequestModels;
 using Business.Contracts.ResponseModels;
 using Business.Exceptions;
+using Data.Abstraction.Repositories;
 using Data.Entity.Entities;
 
 namespace Business.Services
@@ -11,12 +11,12 @@ namespace Business.Services
     internal class RoleService : IRoleService
     {
         private readonly IRoleRepository _roleRepository;
-        private readonly IPermissionMeta _permissionMeta;
+        private readonly IPermissionHelper _permissionHelper;
 
-        public RoleService(IRoleRepository roleRepository, IPermissionMeta permissionMeta)
+        public RoleService(IRoleRepository roleRepository, IPermissionHelper permissionHelper)
         {
             _roleRepository = roleRepository;
-            _permissionMeta = permissionMeta;
+            _permissionHelper = permissionHelper;
         }
 
         public async Task<Guid> Add(RoleAddRequestModel model)
@@ -58,12 +58,11 @@ namespace Business.Services
             model.Permissions = model.Permissions.Distinct().ToList();
             
             var role = await _roleRepository.GetByGuid(model.Guid) ?? throw new RoleDoesNotExistsException();
-            var invalidPermissions = model.Permissions.Except(_permissionMeta.Permissions).ToList();
+            var invalidPermissions = model.Permissions.Except(_permissionHelper.Permissions).ToList();
             if(invalidPermissions.Any()) throw new InvalidPermissionException(invalidPermissions);
             
-            var permissionsDependencies = _permissionMeta.ListPermissionsDependencies(model.Permissions);
-            var permissionsWithDependencies = model.Permissions.Union(permissionsDependencies);
-            
+            var permissionsWithDependencies = _permissionHelper.ListPermissionsWithDependencies(model.Permissions.ToArray());
+
             role.SetPermissions(permissionsWithDependencies);
             await _roleRepository.Update(role);
             
