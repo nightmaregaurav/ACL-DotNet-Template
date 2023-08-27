@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Abstraction.MetaData;
+using Business.Abstraction.MetaData;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Business.Helpers

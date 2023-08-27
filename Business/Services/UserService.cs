@@ -1,9 +1,9 @@
-using Business.Abstraction;
-using Data.Abstraction;
-using Abstraction.MetaData;
+using Business.Abstraction.Helpers;
+using Business.Abstraction.Services;
 using Business.Contracts.RequestModels;
 using Business.Contracts.ResponseModels;
 using Business.Exceptions;
+using Data.Abstraction.Repositories;
 using Data.Entity.Entities;
 
 namespace Business.Services
@@ -11,16 +11,14 @@ namespace Business.Services
     internal class UserService : IUserService
     {
         private readonly IRoleRepository _roleRepository;
-        private readonly IUserMeta _userMeta;
         private readonly IUserRepository _userRepository;
-        private readonly IPermissionMeta _permissionMeta;
+        private readonly IPermissionHelper _permissionHelper;
 
-        public UserService(IUserMeta userMeta, IUserRepository userRepository, IRoleRepository roleRepository, IPermissionMeta permissionMeta)
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IPermissionHelper permissionHelper)
         {
-            _userMeta = userMeta;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
-            _permissionMeta = permissionMeta;
+            _permissionHelper = permissionHelper;
         }
 
         public async Task<Guid> Add(UserAddRequestModel model)
@@ -63,21 +61,15 @@ namespace Business.Services
             model.Permissions = model.Permissions.Distinct().ToList();
             
             var user = await _userRepository.GetByGuid(model.Guid) ?? throw new UserDoesNotExistsException();
-            var invalidPermissions = model.Permissions.Except(_permissionMeta.Permissions).ToList();
+            var invalidPermissions = model.Permissions.Except(_permissionHelper.Permissions).ToList();
             if(invalidPermissions.Any()) throw new InvalidPermissionException(invalidPermissions);
             
-            var permissionDependencies = _permissionMeta.ListPermissionsDependencies(model.Permissions);
-            var permissionWithDependencies = model.Permissions.Union(permissionDependencies);
-            
+            var permissionWithDependencies = _permissionHelper.ListPermissionsWithDependencies(model.Permissions.ToArray());
+
             user.SetPermissions(permissionWithDependencies);
             await _userRepository.Update(user);
             
             return user.GetPermissions();
-        }
-
-        public async Task<IEnumerable<string>> GetPermissions()
-        {
-            return await GetPermissions(_userMeta.Guid);
         }
 
         public async Task<IEnumerable<string>> GetPermissions(Guid guid)

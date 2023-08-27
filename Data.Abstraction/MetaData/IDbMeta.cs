@@ -1,4 +1,4 @@
-namespace Abstraction.MetaData
+namespace Data.Abstraction.MetaData
 {
     public interface IDbMeta
     {

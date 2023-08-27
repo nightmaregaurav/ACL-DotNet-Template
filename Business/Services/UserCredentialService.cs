@@ -1,9 +1,9 @@
-using Business.Abstraction;
+using Business.Abstraction.Services;
 using Business.Contracts.RequestModels;
 using Business.Contracts.ResponseModels;
-using Data.Abstraction;
 using Business.Exceptions;
 using Business.Helpers;
+using Data.Abstraction.Repositories;
 using Data.Entity.Entities;
 
 namespace Business.Services

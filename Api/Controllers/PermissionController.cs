@@ -1,4 +1,4 @@
-using Abstraction.MetaData;
+using Api.ACL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -7,53 +7,32 @@ namespace Api.Controllers
     [Route("/api/permissions")]
     public class PermissionController : ControllerBase
     {
-        private readonly IPermissionMeta _permissionMeta;
+        private readonly PermissionHelper _permissionHelper;
 
-        public PermissionController(IPermissionMeta permissionMeta)
+        public PermissionController(PermissionHelper permissionHelper)
         {
-            _permissionMeta = permissionMeta;
+            _permissionHelper = permissionHelper;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IDictionary<string,IEnumerable<string>>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
         public Task<IActionResult> Get()
         {
-            return Task.FromResult<IActionResult>(Ok(_permissionMeta.PermissionScopeMap));
-        }
-
-        [HttpGet("{scope}")]
-        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        public Task<IActionResult> Get(string scope)
-        {
-            return Task.FromResult<IActionResult>(Ok(_permissionMeta.ListPermissions(scope)));
-        }
-
-        [HttpGet("list")]
-        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        public Task<IActionResult> List()
-        {
-            return Task.FromResult<IActionResult>(Ok(_permissionMeta.Permissions));
-        }
-        
-        [HttpGet("list-scopes")]
-        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        public Task<IActionResult> ListScopes()
-        {
-            return Task.FromResult<IActionResult>(Ok(_permissionMeta.Scopes));
+            return Task.FromResult<IActionResult>(Ok(_permissionHelper.Permissions));
         }
         
         [HttpGet("dependencies")]
         [ProducesResponseType(typeof(IDictionary<string,IEnumerable<string>>), 200)]
         public Task<IActionResult> Dependencies()
         {
-            return Task.FromResult<IActionResult>(Ok(_permissionMeta.PermissionDependencyMap));
+            return Task.FromResult<IActionResult>(Ok(_permissionHelper.PermissionDependencyMap));
         }
         
         [HttpGet("{permission}/dependencies")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
         public Task<IActionResult> Dependencies(string permission)
         {
-            return Task.FromResult<IActionResult>(Ok(_permissionMeta.ListDependencies(permission)));
+            return Task.FromResult<IActionResult>(Ok(_permissionHelper.ListPermissionsWithDependencies(permission)));
         }
     }
 }

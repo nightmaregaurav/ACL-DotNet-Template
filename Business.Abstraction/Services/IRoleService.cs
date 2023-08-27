@@ -1,7 +1,7 @@
 using Business.Contracts.RequestModels;
 using Business.Contracts.ResponseModels;
 
-namespace Business.Abstraction
+namespace Business.Abstraction.Services
 {
     public interface IRoleService
     {

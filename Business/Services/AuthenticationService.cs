@@ -1,17 +1,16 @@
 using System.Security.Claims;
-using Data.Abstraction;
-using Abstraction.MetaData;
+using Business.Abstraction.MetaData;
 using Business.Contracts.RequestModels;
 using Business.Exceptions;
 using Business.Helpers;
+using Data.Abstraction.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using IAuthenticationService = Business.Abstraction.IAuthenticationService;
 
 namespace Business.Services
 {
-    internal class AuthenticationService : IAuthenticationService
+    internal class AuthenticationService : Abstraction.Services.IAuthenticationService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserCredentialRepository _userCredentialRepository;

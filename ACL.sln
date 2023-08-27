@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Entity", "Data.Entity\Data.Entity.csproj", "{219D2F43-0591-4140-8066-F70E1EBFF368}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstraction", "Abstraction\Abstraction.csproj", "{A05355DF-64D2-41AC-A438-0E7DA54BB918}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Abstraction", "Data.Abstraction\Data.Abstraction.csproj", "{AE720A23-438A-4D44-B220-F2BB494FBD6B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business.Abstraction", "Business.Abstraction\Business.Abstraction.csproj", "{88C4E6E7-EA2E-4893-B0E3-5FC282F9A0E4}"
@@ -30,10 +28,6 @@ Global
 		{219D2F43-0591-4140-8066-F70E1EBFF368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{219D2F43-0591-4140-8066-F70E1EBFF368}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{219D2F43-0591-4140-8066-F70E1EBFF368}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A05355DF-64D2-41AC-A438-0E7DA54BB918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A05355DF-64D2-41AC-A438-0E7DA54BB918}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A05355DF-64D2-41AC-A438-0E7DA54BB918}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A05355DF-64D2-41AC-A438-0E7DA54BB918}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE720A23-438A-4D44-B220-F2BB494FBD6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE720A23-438A-4D44-B220-F2BB494FBD6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE720A23-438A-4D44-B220-F2BB494FBD6B}.Release|Any CPU.ActiveCfg = Release|Any CPU

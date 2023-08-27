@@ -1,4 +1,4 @@
-using Abstraction.MetaData;
+using Data.Abstraction.MetaData;
 using Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
