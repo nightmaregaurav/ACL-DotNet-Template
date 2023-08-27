@@ -13,11 +13,15 @@ namespace Api
         public static void UseDi(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddSingleton<IJwtMeta, JwtMeta>();
             services.AddSingleton<PermissionHelper>();
             services.AddSingleton<IPermissionHelper, PermissionHelper>();
 
             services.AddScoped<IDbMeta, DbMeta>();
+            services.AddDbContext<AppDbContext>();
+            services.AddScoped<AppDbContext>();
+
             services.AddScoped<UserMeta>();
 
             services.UseDataDi();
