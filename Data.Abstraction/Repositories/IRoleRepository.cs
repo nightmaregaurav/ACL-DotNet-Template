@@ -4,7 +4,7 @@ namespace Data.Abstraction.Repositories
 {
     public interface IRoleRepository
     {
-        Task Update(Role role);
-        Task<Role?> GetByGuid(string guid);
+        Task UpdateAsync(Role role);
+        Task<Role?> GetByGuidAsync(string guid);
     }
 }

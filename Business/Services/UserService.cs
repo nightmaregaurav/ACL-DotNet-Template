@@ -13,14 +13,14 @@ namespace Business.Services
         {
             dto.Permissions = dto.Permissions.Distinct().ToList();
             
-            var user = await userRepository.GetByGuid(dto.Guid) ?? throw new UserDoesNotExistsException();
+            var user = await userRepository.GetByGuidAsync(dto.Guid) ?? throw new UserDoesNotExistsException();
             var invalidPermissions = dto.Permissions.Except(permissionHelper.Permissions).ToList();
             if(invalidPermissions.Count != 0) throw new InvalidPermissionException(invalidPermissions);
             
             var permissionWithDependencies = permissionHelper.ListPermissionsWithDependencies(dto.Permissions.ToArray());
 
             user.SetPermissions(permissionWithDependencies);
-            await userRepository.Update(user);
+            await userRepository.UpdateAsync(user);
             
             var directPermissions = user.GetPermissions().ToList();
             var inheritedPermissions = user.Roles.Select(role => new InheritedPermissionDto
@@ -38,7 +38,7 @@ namespace Business.Services
 
         public async Task<UserPermissionResponseDto> GetPermissionsAsync(string guid)
         {
-            var user = await userRepository.GetByGuid(guid) ?? throw new UserDoesNotExistsException();
+            var user = await userRepository.GetByGuidAsync(guid) ?? throw new UserDoesNotExistsException();
             var directPermissions = user.GetPermissions().ToList();
             var inheritedPermissions = user.Roles.Select(role => new InheritedPermissionDto
             {

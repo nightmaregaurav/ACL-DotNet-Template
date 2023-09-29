@@ -6,7 +6,7 @@ namespace Data.Models.Entities
         public string Guid { get; }
         public string FullName { get; private set; }
         public string? Permissions { get; private set; }
-        public virtual IEnumerable<Role> Roles { get; private set; }
+        public virtual IEnumerable<Role> Roles { get; } = new List<Role>();
 
         protected User()
         {

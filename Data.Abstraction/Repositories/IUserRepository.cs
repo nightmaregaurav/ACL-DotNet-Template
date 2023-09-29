@@ -4,7 +4,7 @@ namespace Data.Abstraction.Repositories
 {
     public interface IUserRepository
     {
-        Task Update(User user);
-        Task<User?> GetByGuid(string guid);
+        Task UpdateAsync(User user);
+        Task<User?> GetByGuidAsync(string guid);
     }
 }

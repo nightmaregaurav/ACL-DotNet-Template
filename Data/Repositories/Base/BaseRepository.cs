@@ -4,58 +4,100 @@ namespace Data.Repositories.Base
 {
     internal class BaseRepository<T> where T : class
     {
+        private readonly AppDbContext _context;
+        private readonly DbSet<T> _table;
+
         public IQueryable<T> Queryable { get; }
-        
-        private readonly AppDbContext _db;
-        private readonly DbSet<T> _dbSet;
 
-        public BaseRepository(AppDbContext db)
+        public BaseRepository(AppDbContext context)
         {
-            _db = db;
-            _dbSet = db.Set<T>();
-            Queryable = _dbSet.AsQueryable();
+            _context = context;
+            _table = context.Set<T>();
+            Queryable = _table.AsQueryable();
         }
 
-        public async Task Insert(T entity)
+        public void SaveChanges() => _context.SaveChanges();
+        public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+
+        public void Insert(T entity)
         {
-            await _dbSet.AddAsync(entity);
-            await Save();
+            _table.Add(entity);
+            SaveChanges();
         }
 
-        public async Task InsertRange(IEnumerable<T> entities)
+        public async Task InsertAsync(T entity)
         {
-            await _dbSet.AddRangeAsync(entities);
-            await Save();
+            await _table.AddAsync(entity);
+            await SaveChangesAsync();
         }
 
-        public async Task Update(T entity)
+        public void InsertRange(IEnumerable<T> entities)
         {
-            _dbSet.Update(entity);
-            await Save();
+            _table.AddRange(entities);
+            SaveChanges();
         }
 
-        public async Task UpdateRange(IEnumerable<T> entities)
+        public async Task InsertRangeAsync(IEnumerable<T> entities)
         {
-            _dbSet.UpdateRange(entities);
-            await Save();
+            await _table.AddRangeAsync(entities);
+            await SaveChangesAsync();
         }
 
-        public async Task Delete(T entity)
+        public void Update(T entity)
         {
-            _dbSet.Remove(entity);
-            await Save();
+            _table.Update(entity);
+            SaveChanges();
         }
 
-        public async Task DeleteRange(IEnumerable<T> entities)
+        public async Task UpdateAsync(T entity)
         {
-            _dbSet.RemoveRange(entities);
-            await Save();
+            _table.Update(entity);
+            await SaveChangesAsync();
         }
 
-        public async Task<T?> GetById(int id) => await _dbSet.FindAsync(id);
-        public async Task<IEnumerable<T>> GetAll() => await _dbSet.ToListAsync();
-        public async Task<int> Count() => await _dbSet.CountAsync();
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            _table.UpdateRange(entities);
+            SaveChanges();
+        }
 
-        private async Task Save() => await _db.SaveChangesAsync();
+        public async Task UpdateRangeAsync(IEnumerable<T> entities)
+        {
+            _table.UpdateRange(entities);
+            await SaveChangesAsync();
+        }
+
+        public void Delete(T entity)
+        {
+            _table.Remove(entity);
+            SaveChanges();
+        }
+
+        public async Task DeleteAsync(T entity)
+        {
+            _table.Remove(entity);
+            await SaveChangesAsync();
+        }
+
+        public void DeleteRange(IEnumerable<T> entities)
+        {
+            _table.RemoveRange(entities);
+            SaveChanges();
+        }
+
+        public async Task DeleteRangeAsync(IEnumerable<T> entities)
+        {
+            _table.RemoveRange(entities);
+            await SaveChangesAsync();
+        }
+
+        public long Count() => Queryable.Count();
+        public async Task<long> CountAsync() => await Queryable.CountAsync();
+
+        public T? GetById(long id) => _table.Find(id);
+        public async Task<T?> GetByIdAsync(long id) => await _table.FindAsync(id);
+
+        public ICollection<T> GetAll() => Queryable.ToList();
+        public async Task<ICollection<T>> GetAllAsync() => await Queryable.ToListAsync();
     }
 }
