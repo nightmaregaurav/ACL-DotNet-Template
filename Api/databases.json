@@ -1,9 +1,9 @@
 {
     "localhost:3000": {
-        "Username": "",
-        "Password": "",
-        "Host": "",
-        "Port": "",
-        "Database": "dev"
+        "username": "postgres",
+        "password": null,
+        "host": "localhost",
+        "port": "5432",
+        "database": "test"
     }
 }
