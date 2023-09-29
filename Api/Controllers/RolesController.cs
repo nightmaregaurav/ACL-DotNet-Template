@@ -1,63 +1,39 @@
+using Api.Controllers.Base;
+using Api.MetaData;
 using Business.Abstraction.Services;
-using Business.Contracts.RequestModels;
-using Business.Contracts.ResponseModels;
+using Business.Models.RequestDto;
 using Microsoft.AspNetCore.Mvc;
+using Models.RequestModels;
 
 namespace Api.Controllers
 {
-    [ApiController]
     [Route("/api/roles")]
-    public class RolesController : ControllerBase
+    public class RolesController(UserMeta userMeta, IRoleService roleService) : BaseApiController
     {
-        private readonly IRoleService _roleService;
-
-        public RolesController(IRoleService roleService)
+        [HttpGet("permissions")]
+        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
+        public async Task<IActionResult> GetPermissions()
         {
-            _roleService = roleService;
-        }
-
-        [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<RoleResponseModel>), 200)]
-        public async Task<IActionResult> Get()
-        {
-            return Ok(await _roleService.GetAll());
+            return Ok(await roleService.GetPermissionsAsync(userMeta.Guid));
         }
 
         [HttpGet("{guid}/permissions")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        public async Task<IActionResult> GetPermissions(Guid guid)
+        public async Task<IActionResult> GetPermissions(string guid)
         {
-            return Ok(await _roleService.GetPermissions(guid));
+            return Ok(await roleService.GetPermissionsAsync(guid));
         }
 
-        [HttpPost]
-        [ProducesResponseType(typeof(Guid), 200)]
-        public async Task<IActionResult> Post(RoleAddRequestModel model)
-        {
-            return Ok(await _roleService.Add(model));
-        }
-
-        [HttpPut]
-        [ProducesResponseType(typeof(void), 200)]
-        public async Task<IActionResult> Put(RoleUpdateRequestModel model)
-        {
-            await _roleService.Update(model);
-            return Ok();
-        }
-
-        [HttpDelete]
-        [ProducesResponseType(typeof(void), 200)]
-        public async Task<IActionResult> Delete(Guid guid)
-        {
-            await _roleService.Delete(guid);
-            return Ok();
-        }
-
-        [HttpPatch]
+        [HttpPatch("permissions")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
         public async Task<IActionResult> Patch(RolePermissionSetRequestModel model)
         {
-            return Ok(await _roleService.SetAndGetNewPermissions(model));
+            var dto = new RolePermissionSetRequestDto
+            {
+                Guid = model.Guid,
+                Permissions = model.Permissions
+            };
+            return Ok(await roleService.SetAndGetNewPermissionsAsync(dto));
         }
     }
 }

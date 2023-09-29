@@ -1,5 +1,5 @@
 using Data.Abstraction.Repositories;
-using Data.Repository;
+using Data.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Data
@@ -10,7 +10,6 @@ namespace Data
         {
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserCredentialRepository, UserCredentialRepository>();
         }
     }
 }

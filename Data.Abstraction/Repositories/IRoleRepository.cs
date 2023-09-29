@@ -1,15 +1,10 @@
-using Data.Entity.Entities;
+using Data.Models.Entities;
 
 namespace Data.Abstraction.Repositories
 {
     public interface IRoleRepository
     {
-        new Task<Role?> GetById(int id);
-        Task Insert(Role role);
         Task Update(Role role);
-        Task Delete(Role role);
-        Task<IEnumerable<Role>> GetAll();
-        Task<Role?> GetByGuid(Guid guid);
-        Task<Role?> GetByName(string roleName);
+        Task<Role?> GetByGuid(string guid);
     }
 }

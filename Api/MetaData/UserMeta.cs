@@ -2,17 +2,15 @@ namespace Api.MetaData
 {
     public class UserMeta
     {
-        public Guid Guid { get; }
-        
+        public string Guid { get; } = string.Empty;
+
         public UserMeta(IHttpContextAccessor accessor)
         {
             var user = accessor.HttpContext?.User;
             if (user == null) return;
 
-            var guid = user.FindFirst("uid")?.Value;
-            var parsed = Guid.TryParse(guid, out var parsedGuid);
-            
-            Guid = parsed ? parsedGuid : Guid.Empty;
+            var guid = user.FindFirst("uid")?.Value ?? "";
+            Guid = guid;
         }
     }
 }
