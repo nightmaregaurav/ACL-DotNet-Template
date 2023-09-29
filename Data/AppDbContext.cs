@@ -33,7 +33,7 @@ namespace Data
             if (!optionsBuilder.IsConfigured)
                 optionsBuilder
                     .UseNpgsql(_connectionString,x=>x.MigrationsHistoryTable("__AppMigrationsHistory", "public"))
-                    .UseSnakeCaseNamingConvention()
+                    // .UseSnakeCaseNamingConvention()
                     .UseLazyLoadingProxies()
                     .ConfigureWarnings(w=>w.Ignore(CoreEventId.DetachedLazyLoadingWarning));
         }
