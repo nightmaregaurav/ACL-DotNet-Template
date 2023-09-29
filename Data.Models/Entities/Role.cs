@@ -8,7 +8,7 @@ namespace Data.Models.Entities
         public string Description { get; private set; }
         public string? Permissions { get; private set; }
 
-        public virtual IEnumerable<User> Users { get; private set; }
+        public virtual IEnumerable<User> Users { get; } = new List<User>();
 
         protected Role()
         {

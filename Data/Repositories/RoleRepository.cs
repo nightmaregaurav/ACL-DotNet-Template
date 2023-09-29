@@ -11,6 +11,6 @@ namespace Data.Repositories
         {
         }
 
-        public async Task<Role?> GetByGuid(string guid) => await Queryable.FirstOrDefaultAsync(x => x.Guid == guid);
+        public async Task<Role?> GetByGuidAsync(string guid) => await Queryable.FirstOrDefaultAsync(x => x.Guid == guid);
     }
 }
