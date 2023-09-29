@@ -1,15 +1,10 @@
-using Business.Contracts.RequestModels;
-using Business.Contracts.ResponseModels;
+using Business.Models.RequestDto;
 
 namespace Business.Abstraction.Services
 {
     public interface IRoleService
     {
-        Task<Guid> Add(RoleAddRequestModel model);
-        Task Update(RoleUpdateRequestModel model);
-        Task Delete(Guid guid);
-        Task<IEnumerable<RoleResponseModel>> GetAll();
-        Task<IEnumerable<string>> SetAndGetNewPermissions(RolePermissionSetRequestModel model);
-        Task<IEnumerable<string>> GetPermissions(Guid guid);
+        Task<IEnumerable<string>> SetAndGetNewPermissionsAsync(RolePermissionSetRequestDto dto);
+        Task<IEnumerable<string>> GetPermissionsAsync(string guid);
     }
 }

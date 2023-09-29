@@ -1,45 +1,62 @@
 using Data.Abstraction.MetaData;
 using Data.Configurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Npgsql;
 
 namespace Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options, IDbMeta dbMeta) : DbContext(options)
     {
-        private readonly string _connectionString;
+        private readonly string _connectionString = GetConnString(dbMeta);
 
-        private static string GetConnString(IDbMeta option)
+        private static string GetConnString(IDbMeta meta)
         {
             var builder = new NpgsqlConnectionStringBuilder
             {
-                Host = option.Host,
-                Username = option.UserName,
-                Database = option.Database,
-                Password = option.Password,
-                CommandTimeout = 500,
+                Username = meta.Username,
+                Password = meta.Password,
+                Host = meta.Host,
+                Port = meta.Port,
+                Database = meta.Database,
                 ApplicationName = "ACL",
+                CommandTimeout = 500,
                 MaxPoolSize = 100,
                 MinPoolSize = 1
             };
             return builder.ConnectionString;
         }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options, IDbMeta dbMetaOptions) : base(options)
-        {
-            _connectionString = GetConnString(dbMetaOptions);
-        }
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured) optionsBuilder.UseLazyLoadingProxies().UseNpgsql(_connectionString);
+            if (!optionsBuilder.IsConfigured)
+                optionsBuilder
+                    .UseNpgsql(_connectionString,x=>x.MigrationsHistoryTable("__AppMigrationsHistory", "public"))
+                    .UseSnakeCaseNamingConvention()
+                    .UseLazyLoadingProxies()
+                    .ConfigureWarnings(w=>w.Ignore(CoreEventId.DetachedLazyLoadingWarning));
         }
+
+        public override int SaveChanges() => SaveChangesAsync().GetAwaiter().GetResult();
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new()) => await base.SaveChangesAsync(cancellationToken);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasDefaultSchema("public");
+
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new UserCredentialConfiguration());
+        }
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            base.ConfigureConventions(configurationBuilder);
+
+            configurationBuilder.Properties<decimal>().HaveColumnType("numeric(30,4)");
+            configurationBuilder.Properties<decimal?>().HaveColumnType("numeric(30,4)");
         }
     }
 }

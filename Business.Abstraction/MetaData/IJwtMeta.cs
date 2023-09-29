@@ -2,9 +2,9 @@ namespace Business.Abstraction.MetaData
 {
     public interface IJwtMeta
     {
-        public string Issuer { get; }
-        public string Audience { get; }
-        public string Key { get; }
-        public int ExpiryMinutes { get; }
+        string Key { get; }
+        string Issuer { get; }
+        string Audience { get; }
+        int ExpiryMinutes { get; }
     }
 }

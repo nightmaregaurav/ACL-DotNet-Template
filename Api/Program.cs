@@ -1,34 +1,71 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
+using System.Reflection;
 using System.Text;
-using System.Text.Json.Serialization;
 using Api;
+using Api.CronServices;
 using Api.Exceptions;
-using Data;
+using Api.MetaData;
+using Api.Middlewares;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
+using Scheduler;
+using Serilog;
+using Shared.JsonConverters;
+using StaticAppSettings;
+using SystemTextJsonHelper;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.UseDi();
 
-builder.Services.AddControllers().AddJsonOptions(jsonOption => jsonOption.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+#region logging_configuration
+if (!Directory.Exists("Logs")) Directory.CreateDirectory("Logs");
+builder.Logging.ClearProviders();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File($"Logs/{Assembly.GetExecutingAssembly().GetName().Name}.log", rollingInterval: RollingInterval.Hour, rollOnFileSizeLimit:true, fileSizeLimitBytes: 10000000)
+    .WriteTo.Console()
+    .CreateLogger();
+builder.Logging.AddSerilog();
+#endregion
+
+#region dependency_injection
+builder.Services.UseDi();
+builder.Services.StartScheduler();
+AppSettingsHelper.Configure(builder.Configuration);
+#endregion
+
+#region default_scheduled_jobs
+SchedulerService.ScheduleJobAsync(new UpdateUserLastSeenCronJob());
+#endregion
+
+#region json_serializer_configuration
+JsonHelper.SetGlobalJsonSerializerOptions(options =>
+{
+    options.Converters.Add(new DateOnlyJsonConverter());
+    options.Converters.Add(new TimeOnlyJsonConverter());
+    return options;
+});
+#endregion
+
+#region controllers_configuration
+builder.Services.AddControllers().AddJsonOptions(_ => JsonHelper.GetJsonSerializerOptions());
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors(corsOptions => corsOptions.AddDefaultPolicy(policy => policy.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(_ => true).AllowCredentials()));
+#endregion
+
+#region swagger_configuration
 builder.Services.AddSwaggerGen(options =>
 {
     options.SupportNonNullableReferenceTypes();
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Policy Permission", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "ACL", Version = "v1" });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT Authorization header. \r\n\r\n Enter 'Bearer'[space][token] in the text input below.\r\n\r\nExample: \"Bearer OurHardWorkAreProtectedByTheseWordsPleaseDontSteal(c)nightmare\""
+        Description = "JWT Authorization header. \r\n\r\n Enter 'Bearer'[space][token] in the text input below.\r\n\r\nExample: \"Bearer OurHardWorkAreProtectedByTheseWordsPleaseDontSteal\""
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement {
         {
@@ -42,17 +79,18 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+#endregion
 
-var jwtIssuer = builder.Configuration["JwtOption:Issuer"];
-var jwtAudience = builder.Configuration["JwtOption:Audience"];
-var jwtKey = builder.Configuration["JwtOption:Key"];
-var jwtExpiryMinutes = builder.Configuration["JwtOption:ExpiryMinutes"];
+#region authentication_configuration
+var jwtIssuer = builder.Configuration[$"{JwtMeta.OptionKey}:{JwtMeta.IssuerKey}"];
+var jwtAudience = builder.Configuration[$"{JwtMeta.OptionKey}:{JwtMeta.AudienceKey}"];
+var jwtKey = builder.Configuration[$"{JwtMeta.OptionKey}:{JwtMeta.KeyKey}"];
+var jwtExpiryMinutes = builder.Configuration[$"{JwtMeta.OptionKey}:{JwtMeta.ExpiryMinutesKey}"];
 if(string.IsNullOrWhiteSpace(jwtIssuer) || string.IsNullOrWhiteSpace(jwtAudience) || string.IsNullOrWhiteSpace(jwtKey) || string.IsNullOrWhiteSpace(jwtExpiryMinutes)) throw new JwtOptionsNotConfiguredException();
-
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(x => {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; 
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {
     o.RequireHttpsMetadata = false;
@@ -71,68 +109,22 @@ builder.Services.AddAuthentication(x => {
 {
     options.ExpireTimeSpan = TimeSpan.FromMinutes(int.Parse(jwtExpiryMinutes));
 });
+#endregion
 
-builder.Services.AddCors(corsOptions => corsOptions.AddDefaultPolicy(policy => policy.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(_ => true).AllowCredentials()));
-builder.Services.AddDbContext<AppDbContext>();
-builder.Services.AddScoped<AppDbContext>();
-
+#region app_configuration
 var app = builder.Build();
 if (!app.Environment.IsDevelopment()) app.UseHsts();
-
-app.UseExceptionHandler(options => {
-    options.Run(async context => {  
-        context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;  
-        context.Response.ContentType = "application/json";  
-        var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();  
-        if (null != exceptionObject)
-        {
-            var result = new Dictionary<string, object?>
-            {
-                {"Endpoint", exceptionObject.Endpoint?.ToString()},
-                {"Error", exceptionObject.Error.GetType().Name},
-                {"Message", exceptionObject.Error.Message},
-                {"Data", exceptionObject.Error.Data},
-                {"HelpLink", exceptionObject.Error.HelpLink},
-                {"StackTrace", exceptionObject.Error.StackTrace},
-                {"InnerException", exceptionObject.Error.InnerException != null ? new Dictionary<string, object?> {
-                    {"Error", exceptionObject.Error.InnerException?.GetType().Name},
-                    {"Message", exceptionObject.Error.InnerException?.Message},
-                    {"Data", exceptionObject.Error.InnerException?.Data},
-                    {"HelpLink", exceptionObject.Error.InnerException?.HelpLink},
-                    {"StackTrace", exceptionObject.Error.InnerException?.StackTrace}
-                } : new Dictionary<string, object?>()}
-            };
-            
-            var jsonResponse = JsonConvert.SerializeObject(result, new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
-
-            await context.Response.WriteAsync(jsonResponse).ConfigureAwait(false);
-        }  
-    });  
-});
-
+app.UseExceptionHandlerMiddleware();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-app.UseSwagger(c => c.RouteTemplate = "/swagger/{documentName}/swagger.json");
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Policy Permission");
-    c.RoutePrefix = "swagger";
-});
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseRouting();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller}/{action=Index}/{id?}");
-    endpoints.MapFallbackToFile("index.html");
-});
-
+app.UseLastActiveMiddleware();
+app.MapControllers();
+app.MapFallbackToFile("index.html");
 app.Run();
+#endregion

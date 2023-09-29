@@ -1,0 +1,9 @@
+{
+    "localhost:3000": {
+        "Username": "",
+        "Password": "",
+        "Host": "",
+        "Port": "",
+        "Database": "dev"
+    }
+}

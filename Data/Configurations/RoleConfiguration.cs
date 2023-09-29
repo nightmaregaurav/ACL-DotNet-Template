@@ -1,4 +1,4 @@
-using Data.Entity.Entities;
+using Data.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,6 +13,7 @@ namespace Data.Configurations
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
             builder.Property(x => x.Permissions).IsRequired(false);
+            builder.HasMany(x => x.Users).WithMany(x => x.Roles);
             builder.ToTable("roles");
         }
     }
