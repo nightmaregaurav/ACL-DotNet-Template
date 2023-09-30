@@ -126,5 +126,6 @@ app.UseAuthorization();
 app.UseLastActiveMiddleware();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+app.MapHealthChecks("/health");
 app.Run();
 #endregion
