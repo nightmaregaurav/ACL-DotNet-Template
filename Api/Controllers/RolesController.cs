@@ -12,17 +12,11 @@ namespace Api.Controllers
     {
         [HttpGet("permissions")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        public async Task<IActionResult> GetPermissions()
-        {
-            return Ok(await roleService.GetPermissionsAsync(userMeta.Guid));
-        }
+        public async Task<IActionResult> GetPermissions() => Ok(await roleService.GetPermissionsAsync(userMeta.Guid));
 
         [HttpGet("{guid}/permissions")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        public async Task<IActionResult> GetPermissions(string guid)
-        {
-            return Ok(await roleService.GetPermissionsAsync(guid));
-        }
+        public async Task<IActionResult> GetPermissions(string guid) => Ok(await roleService.GetPermissionsAsync(guid));
 
         [HttpPatch("permissions")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]

@@ -12,21 +12,21 @@ namespace Business.Services
         public async Task<UserPermissionResponseDto> SetAndGetNewPermissionsAsync(UserPermissionSetRequestDto dto)
         {
             dto.Permissions = dto.Permissions.Distinct().ToList();
-            
+
             var user = await userRepository.GetByGuidAsync(dto.Guid) ?? throw new UserDoesNotExistsException();
             var invalidPermissions = dto.Permissions.Except(permissionHelper.Permissions).ToList();
             if(invalidPermissions.Count != 0) throw new InvalidPermissionException(invalidPermissions);
-            
+
             var permissionWithDependencies = permissionHelper.ListPermissionsWithDependencies(dto.Permissions.ToArray());
 
             user.SetPermissions(permissionWithDependencies);
             await userRepository.UpdateAsync(user);
-            
+
             var directPermissions = user.GetPermissions().ToList();
             var inheritedPermissions = user.Roles.Select(role => new InheritedPermissionDto
             {
                 Permissions = role.GetPermissions().ToList(),
-                InheritedFromRoleId = role.Id
+                InheritedFromRoleGuid = role.Guid
             }).ToList();
 
             return new UserPermissionResponseDto
@@ -43,7 +43,7 @@ namespace Business.Services
             var inheritedPermissions = user.Roles.Select(role => new InheritedPermissionDto
             {
                 Permissions = role.GetPermissions().ToList(),
-                InheritedFromRoleId = role.Id
+                InheritedFromRoleGuid = role.Guid
             }).ToList();
 
             return new UserPermissionResponseDto
@@ -53,9 +53,6 @@ namespace Business.Services
             };
         }
 
-        public async Task BulkUpdateLastSeenAsync(Dictionary<string, DateTime> userGuidDict)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task BulkUpdateLastSeenAsync(Dictionary<string, DateTime> userGuidDict) => throw new NotImplementedException();
     }
 }

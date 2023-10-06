@@ -9,6 +9,6 @@ namespace Business.Models.ResponseDto
     public record InheritedPermissionDto
     {
         public ICollection<string> Permissions { get; set; }
-        public long InheritedFromRoleId { get; set; }
+        public string InheritedFromRoleGuid { get; set; }
     }
 }
