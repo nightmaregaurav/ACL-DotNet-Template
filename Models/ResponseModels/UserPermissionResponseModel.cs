@@ -9,6 +9,6 @@ namespace Models.ResponseModels
     public record InheritedPermissionModel
     {
         public ICollection<string> Permissions { get; set; }
-        public long InheritedFromRoleId { get; set; }
+        public string InheritedFromRoleGuid { get; set; }
     }
 }

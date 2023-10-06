@@ -22,7 +22,7 @@ namespace Api.Controllers
                 InheritedPermissions = permissionDto.InheritedPermissions.Select(x => new InheritedPermissionModel
                 {
                     Permissions = x.Permissions,
-                    InheritedFromRoleId = x.InheritedFromRoleId
+                    InheritedFromRoleGuid = x.InheritedFromRoleGuid
                 }).ToList()
             };
             return Ok(permissionResponseModel);
@@ -39,7 +39,7 @@ namespace Api.Controllers
                 InheritedPermissions = permissionDto.InheritedPermissions.Select(x => new InheritedPermissionModel
                 {
                     Permissions = x.Permissions,
-                    InheritedFromRoleId = x.InheritedFromRoleId
+                    InheritedFromRoleGuid = x.InheritedFromRoleGuid
                 }).ToList()
             };
             return Ok(permissionResponseModel);
@@ -62,7 +62,7 @@ namespace Api.Controllers
                 InheritedPermissions = permissionDto.InheritedPermissions.Select(x => new InheritedPermissionModel
                 {
                     Permissions = x.Permissions,
-                    InheritedFromRoleId = x.InheritedFromRoleId
+                    InheritedFromRoleGuid = x.InheritedFromRoleGuid
                 }).ToList()
             };
             return Ok(permissionResponseModel);

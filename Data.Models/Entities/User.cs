@@ -2,7 +2,7 @@ namespace Data.Models.Entities
 {
     public class User
     {
-        public long Id { get; }
+        private long Id { get; }
         public string Guid { get; }
         public string FullName { get; private set; }
         public string? Permissions { get; private set; }
