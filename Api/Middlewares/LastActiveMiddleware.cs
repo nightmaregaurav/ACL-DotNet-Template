@@ -13,13 +13,13 @@ namespace Api.Middlewares
                 if (!string.IsNullOrEmpty(userId))
                 {
                     const string cacheKey = "UsersLastSeen";
-                    var values = CacheHelper.Get<Dictionary<string, DateTime>>(cacheKey) ?? new Dictionary<string, DateTime>();
+                    var values = await CacheHelper.GetAsync<Dictionary<string, DateTime>>(cacheKey).ConfigureAwait(true) ?? new Dictionary<string, DateTime>();
                     if (values.ContainsKey(userId)) values[userId] = DateTime.UtcNow;
                     else values.Add(userId, DateTime.Now);
-                    await CacheHelper.SetAsync(cacheKey, values, TimeSpan.FromDays(1));
+                    await CacheHelper.SetAsync(cacheKey, values, TimeSpan.FromDays(1)).ConfigureAwait(true);
                 }
             }
-            await next(httpContext);
+            await next(httpContext).ConfigureAwait(true);
         }
     }
 

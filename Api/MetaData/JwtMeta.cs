@@ -5,14 +5,13 @@ namespace Api.MetaData
 {
     internal class JwtMeta : IJwtMeta
     {
+        public const string OptionKey = "JwtOption";
+        public const string IssuerKey = "Issuer";
+        public const string AudienceKey = "Audience";
+        public const string KeyKey = "Key";
+        public const string ExpiryMinutesKey = "ExpiryMinutes";
 
-        public static readonly string OptionKey = "JwtOption";
-        public static readonly string IssuerKey = "Issuer";
-        public static readonly string AudienceKey = "Audience";
-        public static readonly string KeyKey = "Key";
-        public static readonly string ExpiryMinutesKey = "ExpiryMinutes";
-
-        public string Issuer { get; set; }
+        public string Issuer { get; }
         public string Audience { get; }
         public string Key { get; }
         public int ExpiryMinutes { get; }

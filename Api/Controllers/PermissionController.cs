@@ -15,6 +15,10 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(IDictionary<string,IEnumerable<string>>), 200)]
         public Task<IActionResult> Dependencies() => Task.FromResult<IActionResult>(Ok(permissionHelper.PermissionDependencyMap));
 
+        [HttpGet("incompatible-dependencies")]
+        [ProducesResponseType(typeof(IDictionary<string,IEnumerable<string>>), 200)]
+        public Task<IActionResult> IncompatibleDependencies() => Task.FromResult<IActionResult>(Ok(permissionHelper.IncompatiblePermissionMap));
+
         [HttpGet("{permission}/dependencies")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
         public Task<IActionResult> Dependencies(string permission) => Task.FromResult<IActionResult>(Ok(permissionHelper.ListPermissionsWithDependencies(permission)));

@@ -1,3 +1,4 @@
+#pragma warning disable CA1506
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text;
@@ -32,6 +33,7 @@ builder.Logging.AddSerilog();
 builder.Services.UseDi();
 builder.Services.StartScheduler();
 AppSettingsHelper.Configure(builder.Configuration);
+builder.Services.AddHealthChecks();
 #endregion
 
 #region default_scheduled_jobs
@@ -129,3 +131,4 @@ app.MapFallbackToFile("index.html");
 app.MapHealthChecks("/health");
 app.Run();
 #endregion
+#pragma warning restore CA1506
