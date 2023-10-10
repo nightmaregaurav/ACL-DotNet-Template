@@ -12,11 +12,11 @@ namespace Api.Controllers
     {
         [HttpGet("permissions")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        public async Task<IActionResult> GetPermissions() => Ok(await roleService.GetPermissionsAsync(userMeta.Guid));
+        public async Task<IActionResult> GetPermissions() => Ok(await roleService.GetPermissionsAsync(userMeta.Guid).ConfigureAwait(true));
 
         [HttpGet("{guid}/permissions")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        public async Task<IActionResult> GetPermissions(string guid) => Ok(await roleService.GetPermissionsAsync(guid));
+        public async Task<IActionResult> GetPermissions(string guid) => Ok(await roleService.GetPermissionsAsync(guid).ConfigureAwait(true));
 
         [HttpPatch("permissions")]
         [ProducesResponseType(typeof(IEnumerable<string>), 200)]
@@ -27,7 +27,7 @@ namespace Api.Controllers
                 Guid = model.Guid,
                 Permissions = model.Permissions
             };
-            return Ok(await roleService.SetAndGetNewPermissionsAsync(dto));
+            return Ok(await roleService.SetAndGetNewPermissionsAsync(dto).ConfigureAwait(true));
         }
     }
 }

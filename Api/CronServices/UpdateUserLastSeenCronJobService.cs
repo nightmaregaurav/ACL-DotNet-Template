@@ -16,10 +16,10 @@ namespace Api.CronServices
         {
             const string cacheKey = "UsersLastSeen";
             var userService = serviceProvider.GetRequiredService<IUserService>();
-            var values = CacheHelper.Get<Dictionary<string, DateTime>>(cacheKey) ?? new Dictionary<string, DateTime>();
-            if (!values.Any()) return;
-            await userService.BulkUpdateLastSeenAsync(values);
-            await CacheHelper.SetAsync(cacheKey, new Dictionary<string, DateTime>(), TimeSpan.FromDays(1));
+            var values = await CacheHelper.GetAsync<Dictionary<string, DateTime>>(cacheKey).ConfigureAwait(false) ?? new Dictionary<string, DateTime>();
+            if (values.Count == 0) return;
+            await userService.BulkUpdateLastSeenAsync(values).ConfigureAwait(false);
+            await CacheHelper.SetAsync(cacheKey, new Dictionary<string, DateTime>(), TimeSpan.FromDays(1)).ConfigureAwait(false);
         }
     }
 }

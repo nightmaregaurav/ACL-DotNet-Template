@@ -13,19 +13,19 @@ namespace Business.Services
         {
             dto.Permissions = dto.Permissions.Distinct().ToList();
 
-            var user = await userRepository.GetByGuidAsync(dto.Guid) ?? throw new UserDoesNotExistsException();
+            var user = await userRepository.GetByGuidAsync(dto.Guid).ConfigureAwait(false) ?? throw new UserDoesNotExistsException();
             var invalidPermissions = dto.Permissions.Except(permissionHelper.Permissions).ToList();
             if(invalidPermissions.Count != 0) throw new InvalidPermissionException(invalidPermissions);
 
             var permissionWithDependencies = permissionHelper.ListPermissionsWithDependencies(dto.Permissions.ToArray());
 
             user.SetPermissions(permissionWithDependencies);
-            await userRepository.UpdateAsync(user);
+            await userRepository.UpdateAsync(user).ConfigureAwait(false);
 
-            var directPermissions = user.GetPermissions().ToList();
+            var directPermissions = user.GetPermissionList().ToList();
             var inheritedPermissions = user.Roles.Select(role => new InheritedPermissionDto
             {
-                Permissions = role.GetPermissions().ToList(),
+                Permissions = role.GetPermissionList().ToList(),
                 InheritedFromRoleGuid = role.Guid
             }).ToList();
 
@@ -38,11 +38,11 @@ namespace Business.Services
 
         public async Task<UserPermissionResponseDto> GetPermissionsAsync(string guid)
         {
-            var user = await userRepository.GetByGuidAsync(guid) ?? throw new UserDoesNotExistsException();
-            var directPermissions = user.GetPermissions().ToList();
+            var user = await userRepository.GetByGuidAsync(guid).ConfigureAwait(false) ?? throw new UserDoesNotExistsException();
+            var directPermissions = user.GetPermissionList().ToList();
             var inheritedPermissions = user.Roles.Select(role => new InheritedPermissionDto
             {
-                Permissions = role.GetPermissions().ToList(),
+                Permissions = role.GetPermissionList().ToList(),
                 InheritedFromRoleGuid = role.Guid
             }).ToList();
 

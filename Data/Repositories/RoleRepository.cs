@@ -5,12 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
-    internal class RoleRepository : BaseRepository<Role>, IRoleRepository
+    internal class RoleRepository(AppDbContext db) : BaseRepository<Role>(db), IRoleRepository
     {
-        public RoleRepository(AppDbContext db) : base(db)
-        {
-        }
-
-        public async Task<Role?> GetByGuidAsync(string guid) => await Queryable.FirstOrDefaultAsync(x => x.Guid == guid);
+        public async Task<Role?> GetByGuidAsync(string guid) => await Queryable.FirstOrDefaultAsync(x => x.Guid == guid).ConfigureAwait(false);
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Api.ACL
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class RequirePermissionAttribute(Permission permission) : Attribute, IAuthorizationFilter
+    public sealed class RequirePermissionAttribute(Permission permission) : Attribute, IAuthorizationFilter
     {
         private string RequiredPermission { get; } = permission.ToString();
 
@@ -32,7 +32,7 @@ namespace Api.ACL
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public class RequireAnonymousAttribute : Attribute, IAuthorizationFilter
+    public sealed class RequireAnonymousAttribute : Attribute, IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {

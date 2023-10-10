@@ -15,7 +15,7 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(UserPermissionResponseModel), 200)]
         public async Task<IActionResult> GetPermissions()
         {
-            var permissionDto = await userService.GetPermissionsAsync(userMeta.Guid);
+            var permissionDto = await userService.GetPermissionsAsync(userMeta.Guid).ConfigureAwait(true);
             var permissionResponseModel = new UserPermissionResponseModel
             {
                 DirectPermissions = permissionDto.DirectPermissions,
@@ -32,7 +32,7 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(UserPermissionResponseModel), 200)]
         public async Task<IActionResult> GetPermissions(string guid)
         {
-            var permissionDto = await userService.GetPermissionsAsync(guid);
+            var permissionDto = await userService.GetPermissionsAsync(guid).ConfigureAwait(true);
             var permissionResponseModel = new UserPermissionResponseModel
             {
                 DirectPermissions = permissionDto.DirectPermissions,
@@ -55,7 +55,7 @@ namespace Api.Controllers
                 Permissions = model.Permissions
             };
 
-            var permissionDto = await userService.SetAndGetNewPermissionsAsync(dto);
+            var permissionDto = await userService.SetAndGetNewPermissionsAsync(dto).ConfigureAwait(true);
             var permissionResponseModel = new UserPermissionResponseModel
             {
                 DirectPermissions = permissionDto.DirectPermissions,
